@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>皮克敏飾品收集清單</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef3e6; --surface:#fbfdf8; --ink:#1f2a1c; --muted:#5c6b57; --line:#cfd9c4;
+  --accent:#3d7a2e; --accent-ink:#ffffff; --chip:#e2ead6; --empty:#f4f7ef; --warn:#b5520f; --hot:#c0392b;
+  --c-r:#d8402f; --c-y:#d9a300; --c-b:#2f6fd6; --c-p:#7a45b8; --c-w:#a39d8c; --c-g:#df5f95; --c-k:#6b6e76; --c-i:#2fa3cc;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121810; --surface:#1a2217; --ink:#e4ecdc; --muted:#9aa892; --line:#2f3b2a;
+    --accent:#7cc46a; --accent-ink:#10200b; --chip:#253021; --empty:#151c13; --warn:#f0a35e; --hot:#ff7a6b;
+    --c-r:#ef6553; --c-y:#f1c232; --c-b:#5d95f0; --c-p:#a77ce0; --c-w:#d9d4c4; --c-g:#f38ab6; --c-k:#a3a6ae; --c-i:#6fd0ee;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121810; --surface:#1a2217; --ink:#e4ecdc; --muted:#9aa892; --line:#2f3b2a;
+  --accent:#7cc46a; --accent-ink:#10200b; --chip:#253021; --empty:#151c13; --warn:#f0a35e; --hot:#ff7a6b;
+  --c-r:#ef6553; --c-y:#f1c232; --c-b:#5d95f0; --c-p:#a77ce0; --c-w:#d9d4c4; --c-g:#f38ab6; --c-k:#a3a6ae; --c-i:#6fd0ee;
+  color-scheme:dark;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Microsoft JhengHei","微軟正黑體","Noto Sans TC","PingFang TC",Calibri,sans-serif; font-size:16px; line-height:1.55}
+.wrap{max-width:980px; margin:0 auto; padding:24px 16px 64px}
+h1{font-size:clamp(1.6rem,4.5vw,2.3rem); font-weight:900; letter-spacing:.02em; margin:0 0 4px; line-height:1.2}
+.sub{color:var(--muted); margin:0 0 20px; font-size:.95rem}
+
+.board{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:18px 18px 14px; margin-bottom:18px}
+.board-top{display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.total{font-size:1.05rem}
+.total b{font-size:1.7rem; font-weight:900}
+.total .pend{font-size:.9rem; color:var(--muted); margin-left:10px}
+.save{font-size:.85rem; color:var(--muted)}
+.meters{display:grid; grid-template-columns:repeat(8,1fr); gap:8px}
+.meter{display:flex; flex-direction:column; align-items:center; gap:6px}
+.tube{position:relative; width:100%; max-width:44px; height:96px; border-radius:22px; background:var(--empty); border:2px solid var(--mc); overflow:hidden}
+.tube span{position:absolute; left:0; right:0; bottom:0; background:var(--mc); transition:height .4s ease}
+.meter .lab{font-weight:700; font-size:.95rem}
+.meter .num{font-size:.78rem; color:var(--muted); white-space:nowrap}
+
+.tabs{display:flex; gap:6px; margin-bottom:14px; overflow-x:auto; padding-bottom:2px}
+.tab{appearance:none; flex:none; border:1px solid var(--line); background:var(--surface); color:var(--ink); font:inherit; font-weight:700; padding:8px 14px; border-radius:999px; cursor:pointer; white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+.tab .cnt{font-weight:500; opacity:.8; margin-left:4px}
+
+/* 標記模式工具列 */
+.brush{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--bg); padding:8px 0; margin-bottom:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.brush .lbl{font-size:.88rem; color:var(--muted); margin-right:2px}
+.bbtn{appearance:none; font:inherit; font-size:.92rem; border:1px solid var(--line); background:var(--surface); color:var(--ink); padding:6px 12px; border-radius:10px; cursor:pointer; display:inline-flex; gap:6px; align-items:center}
+.bbtn[aria-pressed="true"]{border-color:var(--accent); box-shadow:inset 0 0 0 2px var(--accent); font-weight:700}
+.bbtn i{font-style:normal; display:inline-flex; width:20px; height:20px; border-radius:50%; align-items:center; justify-content:center; font-size:.72rem; font-weight:900; border:2px solid var(--ink)}
+.bbtn i.s3{background:var(--ink); color:var(--surface)}
+.bbtn i.s2{border-style:double; border-width:3px}
+.bbtn i.s1{border-style:dashed}
+.bbtn i.s4{border-width:3px; background:var(--chip)}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:10; background:var(--bg)}
+
+.filters{display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; margin-bottom:16px}
+.filters input[type=search], .filters select, .form input, .form select{font:inherit; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-height:40px}
+.filters input[type=search]{flex:1 1 200px}
+.check{display:inline-flex; gap:6px; align-items:center; font-size:.95rem; cursor:pointer}
+.check input{width:18px; height:18px; accent-color:var(--accent)}
+
+.cat{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px}
+.cat.done{border-color:var(--accent)}
+.cat-head{display:flex; justify-content:space-between; gap:10px; align-items:flex-start; margin-bottom:8px}
+.cat h2{font-size:1.15rem; margin:0; font-weight:900}
+.cat h2 small{font-weight:500; color:var(--muted); font-size:.8rem; margin-left:6px}
+.where{margin:2px 0 0; color:var(--muted); font-size:.85rem}
+.prog{flex:none; font-weight:700; font-size:.9rem; background:var(--chip); border-radius:999px; padding:3px 10px; white-space:nowrap}
+.cat.done .prog{background:var(--accent); color:var(--accent-ink)}
+.status{display:inline-block; font-size:.75rem; font-weight:700; border-radius:6px; padding:1px 7px; margin-left:6px; vertical-align:2px}
+.status.live{background:var(--hot); color:#fff}
+.status.soon{background:var(--chip); color:var(--ink)}
+.status.over{background:transparent; border:1px solid var(--line); color:var(--muted)}
+.row{display:grid; grid-template-columns:minmax(140px,190px) 1fr; gap:6px 12px; align-items:center; padding:7px 0; border-top:1px dashed var(--line)}
+.cname{font-size:.95rem; display:flex; flex-wrap:wrap; gap:4px; align-items:center}
+.tag{font-size:.72rem; font-weight:700; padding:1px 7px; border-radius:6px; background:var(--chip); color:var(--ink)}
+.tag.rare{background:#f6e3a1; color:#5b4300}
+.tag.q{cursor:help; background:transparent; border:1px solid var(--line); color:var(--muted)}
+.pb{font-size:.75rem; display:inline-flex; align-items:center; gap:3px; border:1px solid var(--line); border-radius:6px; padding:0 6px; color:var(--muted); white-space:nowrap}
+.xdel{appearance:none; border:none; background:none; color:var(--muted); font:inherit; font-size:.8rem; cursor:pointer; text-decoration:underline; padding:0 2px}
+.dots{display:flex; flex-wrap:wrap; gap:6px}
+.dot,.gap{width:34px; height:34px; flex:none}
+.dot{appearance:none; border-radius:50%; border:2px solid var(--dc); background:transparent; color:var(--dc); font:inherit; font-size:.85rem; font-weight:900; cursor:pointer; padding:0; line-height:1; display:inline-flex; align-items:center; justify-content:center; transition:background .15s, transform .1s}
+.dot:active{transform:scale(.92)}
+.dot[data-s="3"]{background:var(--dc); color:#fff}
+.dot.lt[data-s="3"]{color:#1f2a1c}
+.dot.zero{opacity:.45}
+.count{display:flex; flex-wrap:wrap; gap:6px 16px; align-items:center; font-size:.9rem; color:var(--muted); margin:-4px 0 12px}
+.count b{color:var(--ink); font-size:1.1rem}
+.count input{width:5em; font:inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:3px 6px}
+.mini{appearance:none; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; width:30px; height:30px; font:inherit; cursor:pointer; margin-left:2px}
+.shroom{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; font-size:.85rem}
+.shroom .shh{width:100%; color:var(--muted)}
+.shi{display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:3px 10px; background:var(--chip)}
+.shi.ok{box-shadow:inset 0 0 0 2px var(--accent)}
+.shi.mid{box-shadow:inset 0 0 0 2px var(--warn)}
+.shi.no{opacity:.7}
+.colorbar{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:12px}
+.colorbar .lbl{font-size:.88rem; color:var(--muted); margin-right:2px}
+.stin{display:inline-flex; align-items:center; gap:4px; font-size:.85rem; color:var(--muted)}
+.stin input{width:6em; font:inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:4px 6px}
+.sechead{font-size:1rem; font-weight:900; margin:14px 0 8px}
+.dot[data-s="2"]{border:4px double var(--dc); background:color-mix(in srgb, var(--dc) 20%, transparent); color:var(--ink); font-size:.8rem}
+.dot[data-s="1"]{border-style:dashed; background:color-mix(in srgb, var(--dc) 10%, transparent); color:var(--ink); font-size:.8rem}
+.dot[data-s="4"]{border-width:3px; background:color-mix(in srgb, var(--dc) 35%, transparent); color:var(--ink); font-size:.8rem}
+.gap{display:inline-block}
+.dot:focus-visible,.tab:focus-visible,button:focus-visible{outline:3px solid var(--accent); outline-offset:2px}
+.origin{display:flex; gap:8px; align-items:center; margin-top:8px; font-size:.88rem; color:var(--muted)}
+.origin input{flex:1; font:inherit; color:var(--ink); background:transparent; border:none; border-bottom:1px solid var(--line); padding:4px 2px; min-width:0}
+.origin input:focus{outline:none; border-bottom-color:var(--accent)}
+.empty{color:var(--muted); text-align:center; padding:30px 0}
+.legend{font-size:.85rem; color:var(--muted); margin:0 0 12px}
+
+/* 優先建議 */
+.tips{display:flex; flex-direction:column; gap:10px}
+.tip{background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:12px; padding:12px 14px}
+.tip.t1{border-left-color:var(--hot)}
+.tip.t2{border-left-color:var(--warn)}
+.tip.t3{border-left-color:var(--accent)}
+.tip h3{margin:0 0 4px; font-size:1.02rem; font-weight:900}
+.tip .why{margin:0 0 6px; font-size:.88rem; color:var(--muted)}
+.need{display:flex; flex-wrap:wrap; gap:6px; font-size:.88rem}
+.need span{display:inline-flex; align-items:center; gap:4px; background:var(--chip); border-radius:999px; padding:2px 9px}
+.sw{display:inline-block; width:11px; height:11px; border-radius:50%; background:var(--dc)}
+.rules{font-size:.85rem; color:var(--muted); background:var(--surface); border:1px dashed var(--line); border-radius:12px; padding:10px 14px; margin-bottom:14px}
+.rules p{margin:0 0 4px}
+
+/* 進行中 */
+.pcard{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:10px; display:grid; grid-template-columns:1fr auto; gap:6px 12px}
+.pcard.long{border-color:var(--warn)}
+.pcard h3{margin:0; font-size:1rem; font-weight:900; display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+.pcard .meta{font-size:.85rem; color:var(--muted)}
+.pcard .ctrl{grid-column:1 / -1; display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; font-size:.9rem}
+.pcard .ctrl input[type=text], .pcard .ctrl input[type=date], .pcard .ctrl input[type=number], .pcard .ctrl select{font:inherit; font-size:.9rem; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:5px 8px; min-height:34px}
+.pcard .ctrl input[type=text]{flex:1 1 160px; min-width:0}
+.days{font-weight:900; font-size:1.2rem; text-align:right; white-space:nowrap}
+.days small{display:block; font-size:.75rem; font-weight:500; color:var(--muted)}
+
+.form{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:grid; grid-template-columns:2fr 1fr 2fr auto auto; gap:10px; align-items:end; margin-bottom:16px}
+.form label{display:flex; flex-direction:column; gap:4px; font-size:.85rem; color:var(--muted)}
+.form .colors{display:flex; flex-wrap:wrap; gap:8px; grid-column:1 / -1; font-size:.9rem; color:var(--ink)}
+.form.ev{grid-template-columns:2fr 2fr 1fr auto}
+.btn{appearance:none; font:inherit; font-weight:700; border:none; background:var(--accent); color:var(--accent-ink); border-radius:10px; padding:9px 16px; min-height:40px; cursor:pointer}
+.btn.ghost{background:transparent; color:var(--muted); border:1px solid var(--line); font-weight:500; padding:6px 10px; min-height:32px}
+.btn.sm{padding:6px 12px; min-height:34px; font-size:.9rem}
+.tblwrap{overflow-x:auto; background:var(--surface); border:1px solid var(--line); border-radius:14px}
+table{width:100%; border-collapse:collapse; font-size:.95rem}
+th,td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap}
+th{font-size:.82rem; color:var(--muted); font-weight:700}
+tr:last-child td{border-bottom:none}
+td.c-name{white-space:normal; min-width:120px}
+td select{font:inherit; font-size:.9rem; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:4px 6px}
+.swatch{display:inline-block; width:12px; height:12px; border-radius:50%; background:var(--dc); margin-right:6px; vertical-align:-1px}
+.note{font-size:.82rem; color:var(--muted); margin-top:18px}
+.toast{position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom,0px) + 20px); transform:translateX(-50%); background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:10px; font-size:.92rem; max-width:90vw; z-index:20; opacity:0; pointer-events:none; transition:opacity .2s}
+.toast.show{opacity:1}
+.guide{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:10px 14px; margin-bottom:10px; font-size:.9rem}
+.guide summary{cursor:pointer; font-weight:700}
+.guide ol{margin:8px 0 6px; padding-left:1.4em}
+.guide li{margin:4px 0}
+.guide li span{color:var(--muted)}
+.guide p{margin:4px 0 0; color:var(--muted); font-size:.85rem}
+.gi{font-style:normal; display:inline-flex; width:20px; height:20px; border-radius:50%; align-items:center; justify-content:center; font-size:.72rem; font-weight:900; border:2px solid var(--ink); margin-right:6px; vertical-align:-4px}
+.gi.s3{background:var(--ink); color:var(--surface)}
+.gi.s2{border-style:double; border-width:3px}
+.gi.s1{border-style:dashed}
+.gi.s4{border-width:3px; background:var(--chip)}
+.sheet{position:fixed; left:50%; transform:translateX(-50%); bottom:calc(env(safe-area-inset-bottom,0px) + 12px); width:min(520px, calc(100% - 24px)); background:var(--surface); border:2px solid var(--accent); border-radius:16px; padding:14px; z-index:30; box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.sheet p{margin:0; font-weight:700}
+.dsq{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0}
+.dsq .bbtn{min-width:44px; min-height:40px; justify-content:center}
+.dsf{display:flex; align-items:center; gap:6px; flex:1; margin-top:10px}
+.dsrow{display:flex; gap:8px; align-items:center}
+.dsrow input{flex:1; min-width:0; font:inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:8px 10px; min-height:40px}
+h2.sec{font-size:1.05rem; font-weight:900; margin:18px 0 10px}
+.tip.seed.new{border-left-color:var(--accent)}
+.tip.seed.maybe{border-left-color:var(--warn)}
+.tip.seed.dup,.tip.seed.no{opacity:.75}
+.tip h3 .rk{display:inline-flex; width:24px; height:24px; border-radius:50%; background:var(--ink); color:var(--surface); font-size:.8rem; align-items:center; justify-content:center; margin-right:8px; vertical-align:2px}
+.vd{font-size:.75rem; font-weight:700; border-radius:6px; padding:1px 8px; margin-left:8px; vertical-align:2px; background:var(--chip); color:var(--ink)}
+.vd.new{background:var(--accent); color:var(--accent-ink)}
+.vd.maybe{background:var(--warn); color:#fff}
+.sctrl{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:6px}
+.sctrl select{font:inherit; font-size:.9rem; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:5px 8px; min-height:34px}
+.form.sd{grid-template-columns:repeat(5,1fr) auto}
+@media (max-width:640px){ .form.sd{grid-template-columns:1fr 1fr} }
+.backup{margin-top:28px; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:12px 16px}
+.backup summary{cursor:pointer; font-weight:700}
+.backup textarea{width:100%; min-height:90px; font:inherit; font-size:.8rem; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:8px; margin:6px 0 10px}
+.bkbtns{display:flex; gap:8px}
+[hidden]{display:none !important}
+
+@media (max-width:640px){
+  .row{grid-template-columns:1fr}
+  .dot,.gap{width:31px; height:31px}
+  .dots{gap:5px}
+  .meters{gap:4px}
+  .tube{height:76px}
+  .form,.form.ev{grid-template-columns:1fr 1fr}
+  .form .wide{grid-column:1 / -1}
+}
+@media (prefers-reduced-motion:reduce){ .tube span,.dot,.toast{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>皮克敏飾品收集清單</h1>
+  <p class="sub">Pikmin Bloom 飾品皮克敏。先選上方的標記方式，再點圓圈。</p>
+
+  <section class="board" aria-label="收集進度">
+    <div class="board-top">
+      <div class="total">已收集 <b id="ownedN">0</b> / <span id="totalN">0</span><span class="pend" id="pendN"></span></div>
+      <div class="save" id="saveStatus" role="status">讀取中…</div>
+    </div>
+    <div class="count">
+      <span>皮克敏總數 <b id="cntTot">0</b></span>
+      <span>飾品 <span id="cntDec">0</span>・進行中 <span id="cntPend">0</span>（探險中 <b id="cntExp" style="font-size:1rem">0</b>）・一般 <span id="cntPlain">0</span> <button class="mini" data-plain="-1" aria-label="一般皮克敏減一">－</button><button class="mini" data-plain="1" aria-label="一般皮克敏加一">＋</button></span>
+      <label>遊戲顯示 <input type="number" id="gameN" min="0" inputmode="numeric" placeholder="例：141"> 隻 <b id="cntDiff"></b></label>
+    </div>
+    <div class="meters" id="meters"></div>
+    <p class="legend" id="meterNote" style="margin:10px 0 0"></p>
+    <div class="shroom" id="shroom"></div>
+  </section>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="tips" aria-selected="true">優先建議</button>
+    <button class="tab" role="tab" data-tab="dex" aria-selected="false">地點飾品</button>
+    <button class="tab" role="tab" data-tab="events" aria-selected="false">活動飾品</button>
+    <button class="tab" role="tab" data-tab="seeds" aria-selected="false">花苗<span class="cnt" id="seedCnt"></span></button>
+    <button class="tab" role="tab" data-tab="prog" aria-selected="false">進行中<span class="cnt" id="progCnt"></span></button>
+    <button class="tab" role="tab" data-tab="custom" aria-selected="false">自訂清單</button>
+  </div>
+
+  <details class="guide" open>
+    <summary>標記怎麼選？（依遊戲流程）</summary>
+    <ol>
+      <li><b>有花苗</b>：花苗還在盆裡走路長大。<span>不用標記。</span></li>
+      <li><i class="gi s1">養</i><b>培養中</b>：已經拔出來，正在養好感度，還沒滿 4 顆心。</li>
+      <li><i class="gi s4">禮</i><b>待出發</b>：滿 4 顆心，出現領禮物的探險，但還沒派出去。</li>
+      <li><i class="gi s2">探</i><b>探險中</b>：已派出去領禮物。花苗來自國外的會比較久，記得到「進行中」勾「國外」。</li>
+      <li><i class="gi s3">✓</i><b>已擁有</b>：領到禮物，變成飾品皮克敏。</li>
+    </ol>
+    <p>巨大花苗、金色花苗拔出來就是飾品皮克敏，不用養好感度、不用探險，拔出來後直接標 ✓。</p>
+  </details>
+
+  <div class="brush" id="brush" hidden role="radiogroup" aria-label="點圓圈時標記為">
+    <span class="lbl">點圓圈標記為</span>
+    <button class="bbtn" data-b="3" aria-pressed="true"><i class="s3">✓</i>已擁有</button>
+    <button class="bbtn" data-b="2" aria-pressed="false"><i class="s2">探</i>探險中</button>
+    <button class="bbtn" data-b="4" aria-pressed="false"><i class="s4">禮</i>待出發</button>
+    <button class="bbtn" data-b="1" aria-pressed="false"><i class="s1">養</i>培養中</button>
+    <button class="bbtn" data-b="6" aria-pressed="false"><i class="s3">＋</i>重複＋1</button>
+    <button class="bbtn" data-b="7" aria-pressed="false"><i>－</i>放掉－1</button>
+  </div>
+  <div class="colorbar" id="colorBar" hidden role="radiogroup" aria-label="只看顏色">
+    <span class="lbl">只看顏色</span>
+    <button class="bbtn" data-cf="" aria-pressed="true">全部</button>
+    <button class="bbtn" data-cf="r" aria-pressed="false"><i class="sw" style="--dc:var(--c-r)"></i>紅</button>
+    <button class="bbtn" data-cf="y" aria-pressed="false"><i class="sw" style="--dc:var(--c-y)"></i>黃</button>
+    <button class="bbtn" data-cf="b" aria-pressed="false"><i class="sw" style="--dc:var(--c-b)"></i>藍</button>
+    <button class="bbtn" data-cf="p" aria-pressed="false"><i class="sw" style="--dc:var(--c-p)"></i>紫</button>
+    <button class="bbtn" data-cf="w" aria-pressed="false"><i class="sw" style="--dc:var(--c-w)"></i>白</button>
+    <button class="bbtn" data-cf="g" aria-pressed="false"><i class="sw" style="--dc:var(--c-g)"></i>羽</button>
+    <button class="bbtn" data-cf="k" aria-pressed="false"><i class="sw" style="--dc:var(--c-k)"></i>岩</button>
+    <button class="bbtn" data-cf="i" aria-pressed="false"><i class="sw" style="--dc:var(--c-i)"></i>冰</button>
+  </div>
+
+  <!-- 優先建議 -->
+  <div id="pane-tips" role="tabpanel">
+    <div class="rules">
+      <p>排序規則：①進行中的限時活動，缺的顏色優先，越快結束越前面；②地點類別只差 1～3 個就收齊的，其中收齊後能開啟「稀有飾品等級」的地點加註；③其他地點依缺少數量由少到多；路邊最常見，排最後。</p>
+      <p>已標「培養中」「待出發」「探險中」的不會再被建議，避免重複。看到遊戲內花苗的飾品圖示符合下列地點和顏色，就優先種它。</p>
+    </div>
+    <h2 class="sec">手上的花苗：建議種植順序</h2>
+    <div id="seedTips"></div>
+    <h2 class="sec">還缺的飾品</h2>
+    <div class="tips" id="tips"></div>
+  </div>
+
+  <!-- 地點飾品 -->
+  <div id="pane-dex" role="tabpanel" hidden>
+    <div class="filters">
+      <input type="search" id="q" placeholder="搜尋地點或飾品，例：車站、橡實" aria-label="搜尋">
+      <select id="status" aria-label="顯示條件">
+        <option value="all">全部地點</option>
+        <option value="todo">還沒收齊</option>
+        <option value="done">已收齊</option>
+        <option value="has">有收集到的</option>
+      </select>
+      <label class="check"><input type="checkbox" id="optRare">顯示稀有飾品</label>
+      <label class="check"><input type="checkbox" id="optJp">顯示日本限定</label>
+    </div>
+    <div id="list"></div>
+    <p class="note">清單依 Pikipedia（2026 年 10 月更新）整理，中文名稱為自行翻譯，可能與遊戲內名稱不同。標有「?」的列，其可取得顏色是推定，若和遊戲內不符，請以遊戲為準。</p>
+  </div>
+
+  <!-- 活動飾品 -->
+  <div id="pane-events" role="tabpanel" hidden>
+    <div class="filters">
+      <select id="evStatus" aria-label="活動顯示條件">
+        <option value="all">全部活動</option>
+        <option value="live">進行中</option>
+        <option value="todo">還沒收齊</option>
+      </select>
+    </div>
+    <div id="evList"></div>
+    <div class="form ev" aria-label="新增活動飾品">
+      <label>活動名稱<input id="eName" placeholder="例：2026 萬聖節"></label>
+      <label>飾品名稱<input id="eItem" placeholder="例：南瓜燈"></label>
+      <label>結束日（可不填）<input id="eEnd" type="date"></label>
+      <button class="btn" id="eAdd">新增活動飾品</button>
+      <div class="colors" id="eColors"></div>
+    </div>
+    <p class="note">只列出 2026 年 9 月之後的活動。9 月以前的活動飾品之後若「復刻」，可用上面的表單自己補。結束的活動會保留，方便對照。</p>
+  </div>
+
+  <!-- 花苗 -->
+  <div id="pane-seeds" role="tabpanel" hidden>
+    <p class="legend">記下遊戲「花苗」頁面裡的花苗。工具會對照你的收集紀錄，判斷種出來是不是新的，並依序排好。有兩種飾品的地點，點進遊戲裡的花苗詳情看是哪一款，在卡片上選好，判斷會更準。</p>
+    <div class="form sd" aria-label="新增花苗">
+      <label>地點或活動<select id="sdCat"></select></label>
+      <label>花苗<select id="sdCol"></select></label>
+      <label>款式<select id="sdCos"></select></label>
+      <label>產地<input id="sdOrg" placeholder="例：淡水區"></label>
+      <label>步數<input id="sdSt" type="number" min="0" inputmode="numeric" placeholder="5000"></label>
+      <button class="btn" id="sdAdd">新增花苗</button>
+    </div>
+    <div class="filters"><input type="search" id="sdQ" placeholder="搜尋花苗，例：車站、淡水、灰色、大花苗、新的" aria-label="搜尋花苗"><select id="sdSort" aria-label="排序"><option value="rank">依優先順序</option><option value="type">依飾品類型（跟遊戲一樣）</option></select></div>
+    <div class="rules" id="grpBox" hidden></div>
+    <div id="seedList"></div>
+  </div>
+
+  <!-- 進行中 -->
+  <div id="pane-prog" role="tabpanel" hidden>
+    <p class="legend">在「地點飾品」或「活動飾品」用「培養中」「待出發」「探險中」標記的會出現在這裡。流程是：培養中（還沒滿 4 心）→ 待出發（滿 4 心，禮物探險還沒派）→ 探險中（去領禮物）→ 回來變身即已擁有。勾「國外」的探險會特別標示，避免重複派遣。</p>
+    <div class="filters">
+      <select id="pFilter" aria-label="進行中顯示條件" hidden>
+        <option value="all">全部進行中</option>
+        <option value="2">只看探險中</option>
+        <option value="4">只看待出發</option>
+        <option value="1">只看培養中</option>
+        <option value="ab">只看國外</option>
+      </select>
+    </div>
+    <div class="dsq" id="pChips" style="margin-top:0"></div>
+    <p class="sechead" id="expSum"></p>
+    <div id="progList"></div>
+  </div>
+
+  <!-- 自訂清單 -->
+  <div id="pane-custom" role="tabpanel" hidden>
+    <div class="form">
+      <label class="wide">名稱<input id="cName" placeholder="例：南瓜燈（活動）"></label>
+      <label>顏色<select id="cColor"></select></label>
+      <label class="wide">產地<input id="cOrigin" placeholder="例：台北車站"></label>
+      <label>狀態<select id="cState"><option value="3">已擁有</option><option value="2">探險中</option><option value="4">待出發</option><option value="1">培養中</option><option value="0">未擁有</option></select></label>
+      <button class="btn" id="cAdd">新增</button>
+    </div>
+    <div class="filters">
+      <input type="search" id="cq" placeholder="搜尋名稱或產地" aria-label="搜尋自訂清單">
+      <select id="cStatus" aria-label="顯示條件">
+        <option value="all">全部</option>
+        <option value="0">未擁有</option>
+        <option value="p">進行中</option>
+        <option value="3">已擁有</option>
+      </select>
+    </div>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>狀態</th><th>名稱</th><th>顏色</th><th>產地</th><th></th></tr></thead>
+        <tbody id="cBody"></tbody>
+      </table>
+    </div>
+    <p class="empty" id="cEmpty">還沒有自訂項目。在上面輸入名稱、顏色和產地後按「新增」。</p>
+  </div>
+  <details class="backup">
+    <summary>備份與還原（換手機、換電腦時用）</summary>
+    <p class="legend">按「產生備份」會把所有紀錄變成一段文字並複製，貼到記事本或傳 LINE 給自己保存。到另一台裝置打開這個工具，把文字貼進下面的框，按「還原」即可。</p>
+    <textarea id="bkText" aria-label="備份文字" placeholder="備份文字會出現在這裡，或把備份文字貼在這裡"></textarea>
+    <div class="bkbtns"><button class="btn sm" id="bkMake">產生備份</button><button class="btn ghost" id="bkLoad">還原</button></div>
+    <p class="legend" id="prevBox" hidden style="margin-top:10px">這台裝置有一份「被覆蓋前」的紀錄。按下方按鈕可以換回來，目前的紀錄也會另存，可以再換回去。<br><button class="btn ghost" id="prevLoad" style="margin-top:6px">換回被覆蓋前的紀錄</button></p>
+  </details>
+</div>
+<div class="sheet" id="pluckSheet" hidden role="dialog" aria-labelledby="plTitle">
+  <p id="plTitle"></p>
+  <p class="legend" id="plHint" style="margin:6px 0 0"></p>
+  <div class="dsq" id="plCols"></div>
+  <div class="dsq" id="plItems"></div>
+  <div class="dsrow"><button class="btn sm" id="plOk">確定</button><button class="btn ghost" id="plCancel">取消</button></div>
+</div>
+<div class="sheet" id="daySheet" hidden role="dialog" aria-labelledby="dsTitle">
+  <p id="dsTitle"></p>
+  <div class="dsrow">
+    <label class="dsf"><input type="number" id="dsD" min="0" step="1" inputmode="numeric" placeholder="0" aria-label="天"> 天</label>
+    <label class="dsf"><input type="number" id="dsH" min="0" max="23" step="1" inputmode="numeric" placeholder="0" aria-label="小時"> 小時</label>
+  </div>
+  <div class="dsrow" style="margin-top:10px">
+    <button class="btn sm" id="dsOk">確定</button>
+    <button class="btn ghost" id="dsSkip">先不填</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+
+var COLORS=[
+  {k:"r",zh:"紅",full:"紅色"},{k:"y",zh:"黃",full:"黃色",lt:true},{k:"b",zh:"藍",full:"藍色"},
+  {k:"p",zh:"紫",full:"紫色"},{k:"w",zh:"白",full:"白色",lt:true},{k:"g",zh:"羽",full:"羽毛"},
+  {k:"k",zh:"岩",full:"岩石"},{k:"i",zh:"冰",full:"冰",lt:true}
+];
+var CMAP={}; COLORS.forEach(function(c){CMAP[c.k]=c;});
+var S7="rybpwgk", S8="rybpwgki";
+var SNAME={0:"未擁有",1:"培養中",2:"探險中",3:"已擁有",4:"待出發"};
+var SGLYPH={1:"養",2:"探",3:"✓",4:"禮"};
+var PRANK={2:3,4:2,1:1};
+function isPend(s){return s===1||s===2||s===4;}
+
+// 收齊後可開啟稀有飾品等級的地點（Pikipedia）
+var RARE_UNLOCK={restaurant:1,cafe:1,pharmacy:1,forest:1,water:1,station:1,"super":1,bakery:1,hair:1,park:1,roadside:1,stadium:1};
+
+// [id, 中文名, 可取得顏色, 旗標]  旗標：rare 稀有、guess 顏色推定
+var CATS=[
+ {id:"restaurant",zh:"餐廳",en:"Restaurant",where:"各類餐廳",items:[["chef","廚師帽",S8],["chef_r","廚師帽",S8,"rare"]]},
+ {id:"cafe",zh:"咖啡廳",en:"Café",where:"咖啡店",items:[["cup","咖啡杯",S8],["cup_r","咖啡杯",S7,"rare"]]},
+ {id:"sweet",zh:"甜點店",en:"Sweetshop",where:"甜點、糕點店",items:[["macaron","馬卡龍",S7],["donut","甜甜圈",S7]]},
+ {id:"cinema",zh:"電影院",en:"Movie Theater",where:"電影院",items:[["popcorn","爆米花",S7]]},
+ {id:"pharmacy",zh:"藥局",en:"Pharmacy",where:"藥局、藥妝店",items:[["tooth","牙刷",S8],["tooth_r","牙刷",S8,"rare"]]},
+ {id:"zoo",zh:"動物園",en:"Zoo",where:"動物園",items:[["dandelion","蒲公英",S7]]},
+ {id:"forest",zh:"森林",en:"Forest",where:"森林、林地",items:[["stag","鍬形蟲",S8],["acorn","橡實",S8],["stag_r","鍬形蟲",S8,"rare"],["acorn_r","橡實",S8,"rare"]]},
+ {id:"water",zh:"水邊",en:"Waterside",where:"河川、湖泊等水域",items:[["lure","釣魚假餌",S7],["lure_r","釣魚假餌",S7,"rare"]]},
+ {id:"post",zh:"郵局",en:"Post Office",where:"郵局",items:[["stamp","郵票",S7]]},
+ {id:"art",zh:"美術館",en:"Art Gallery",where:"博物館、美術館",items:[["frame","畫框",S7]]},
+ {id:"airport",zh:"機場",en:"Airport",where:"機場",items:[["plane","玩具飛機",S7],["tag","行李吊牌",S8]]},
+ {id:"station",zh:"車站",en:"Station",where:"火車站",items:[["train","紙火車",S7],["ticket","車票",S8],["ticket_r","車票",S8,"rare"]]},
+ {id:"beach",zh:"海灘",en:"Beach",where:"沙灘",items:[["shell","貝殼",S7]]},
+ {id:"burger",zh:"漢堡店",en:"Burger Place",where:"速食店",items:[["burger","漢堡",S7]]},
+ {id:"corner",zh:"便利商店",en:"Corner Store",where:"便利商店",items:[["cap","瓶蓋",S7],["snack","零食",S7,"guess"]]},
+ {id:"super",zh:"超市",en:"Supermarket",where:"超市",items:[["mushroom","蘑菇",S7],["banana","香蕉",S7,"guess"],["banana_r","香蕉",S7,"rare guess"]]},
+ {id:"bakery",zh:"麵包店",en:"Bakery",where:"麵包店",items:[["baguette","法國麵包",S8],["pastry","酥皮麵包",S8,"guess"],["baguette_r","法國麵包",S7,"rare"]]},
+ {id:"hair",zh:"美髮店",en:"Hair Salon",where:"美髮、理髮店",items:[["scissors","剪刀",S7],["scissors_r","剪刀",S7,"rare"]]},
+ {id:"clothes",zh:"服飾店",en:"Clothes Store",where:"服飾、鞋店",items:[["hairtie","髮圈",S7]]},
+ {id:"park",zh:"公園",en:"Park",where:"公園",items:[["clover","三葉草",S8],["four","四葉草",S8],["clover_r","三葉草",S8,"rare"],["four_r","四葉草",S8,"rare"]]},
+ {id:"library",zh:"圖書館與書店",en:"Library & Bookstore",where:"圖書館、書店",items:[["book","小書",S7]]},
+ {id:"sushi",zh:"壽司店",en:"Sushi Restaurant",where:"壽司店",items:[["sushi","壽司",S7]]},
+ {id:"mountain",zh:"山",en:"Mountain",where:"山頂",items:[["mtpin","山岳徽章",S7]]},
+ {id:"stadium",zh:"體育場",en:"Stadium",where:"運動場館",items:[["ball","球吊飾",S8],["ball_r","球吊飾",S8,"rare"]]},
+ {id:"themepark",zh:"遊樂園",en:"Theme Park",where:"遊樂園",items:[["tp_wheel","門票（摩天輪）","ryb"],["tp_ship","門票（海盜船）","ryb"]]},
+ {id:"bus",zh:"公車站",en:"Bus Stop",where:"公車站牌",items:[["bus","公車紙模型",S7]]},
+ {id:"italian",zh:"義式餐廳",en:"Italian Restaurant",where:"義式、披薩店",items:[["pizza","披薩",S7],["pasta","義大利麵",S7,"guess"]]},
+ {id:"ramen",zh:"拉麵店",en:"Ramen Restaurant",where:"拉麵、麵店、中式餐廳",items:[["ramen","拉麵吊飾",S7]]},
+ {id:"bridge",zh:"橋",en:"Bridge",where:"橋樑",items:[["brpin","橋樑徽章",S7]]},
+ {id:"hotel",zh:"飯店",en:"Hotel",where:"飯店、旅館",items:[["amenity","飯店備品",S7]]},
+ {id:"makeup",zh:"化妝品店",en:"Makeup Store",where:"化妝品店、百貨公司",items:[["makeup","化妝品",S7]]},
+ {id:"shrine",zh:"神社與寺廟",en:"Shrine & Temple",where:"僅限日本的神社與寺廟",jp:true,items:[["f1","籤詩（大吉）",S7],["f2","籤詩（吉）",S7],["f3","籤詩（中吉）",S7],["f4","籤詩（小吉）",S7],["f5","籤詩（末吉）",S7]]},
+ {id:"appliance",zh:"家電行",en:"Appliances Store",where:"家電、3C 賣場（電池 6 款都是黃色，依遊戲圖鑑順序；燈串黃、紫是依圖鑑剪影推定）",items:[["battery","電池・款式1","y"],["battery2","電池・款式2","y"],["battery3","電池・款式3","y"],["battery4","電池・款式4","y"],["battery5","電池・款式5","y"],["battery6","電池・款式6","y"],["lights","燈串","yp","guess"]]},
+ {id:"curry",zh:"咖哩店",en:"Curry Restaurant",where:"咖哩、印度料理",items:[["curry","咖哩碗",S7]]},
+ {id:"diy",zh:"五金行",en:"DIY Store",where:"五金、居家修繕",items:[["tool","工具",S7]]},
+ {id:"univ",zh:"大學",en:"University & College",where:"大學、學院",items:[["crest","校徽布章","ryb"]]},
+ {id:"mexican",zh:"墨西哥餐廳",en:"Mexican Restaurant",where:"墨西哥料理",items:[["taco","塔可",S7]]},
+ {id:"laundry",zh:"洗衣店",en:"Laundromats & Dry Cleaners",where:"自助洗衣、乾洗店",items:[["laundry","洗衣用品",S7]]},
+ {id:"korean",zh:"韓式餐廳",en:"Korean Restaurant",where:"韓式料理",items:[["kimchi","泡菜",S8]]},
+ {id:"stationery",zh:"文具店",en:"Stationery Store",where:"文具、手作材料店",items:[["stationery","文具",S8]]},
+ {id:"rain",zh:"下雨",en:"Rainy Day",where:"天氣飾品：下雨天找到的花苗，跟地點無關（只有藍色，3 款依遊戲圖鑑順序）",items:[["rain1","下雨・款式1","b"],["rain2","下雨・款式2","b"],["rain3","下雨・款式3","b"]]},
+ {id:"snow",zh:"下雪",en:"Snowy Day",where:"天氣飾品：下雪天找到的花苗，跟地點無關",items:[["snowday","下雪飾品","bwi"]]},
+ {id:"roadside",zh:"路邊",en:"Roadside",where:"不屬於以上任何地點時",items:[["st_g","綠色貼紙",S8],["st_b","藍色貼紙",S8],["st_o","橘色貼紙",S8],["coin","硬幣",S8],["coin_r","金色硬幣",S8,"rare"]]}
+];
+
+// 活動（日期為當地時間）
+var EVENTS=[
+ {id:"e2611",zh:"5 週年：玩具珠寶",period:"2026/11/1～11/30",start:"2026-11-01",end:"2026-11-30",
+  where:"活動挑戰拿 5 週年玩具珠寶花苗；活動任務拿 4 週年花盒、3 週年杯子蛋糕花苗（復刻，杯子蛋糕沒有冰）。邀請好友的金色花苗會長成 5 週年玩具珠寶。活動期間這三款打菇稍微加強。",
+  items:[["jewel5","5 週年玩具珠寶",S8],["flowerbox4","4 週年花盒",S8,"guess"],["cupcake3","3 週年杯子蛋糕",S7]]},
+ {id:"e2610",zh:"萬聖節：彩繪玻璃",period:"2026/10/1～10/31",start:"2026-10-01",end:"2026-10-31",
+  where:"活動挑戰、邀請好友；萬聖節燈與糖果為復刻。特殊任務券販售至 11/7，任務須在 12/31 前完成。巨大萬聖節蘑菇 10/28～10/31。",
+  items:[["glass","萬聖節彩繪玻璃",S8],["hlight","萬聖節燈",S7],["htreat","萬聖節糖果",S7]]},
+ {id:"e2609",zh:"秋季節慶",period:"2026/9/1～9/30",start:"2026-09-01",end:"2026-09-30",
+  where:"香腸為新飾品，月餅、秋季貼紙為復刻。月餅這次首度開放冰皮克敏。",
+  items:[["wurst","香腸",S8],["mooncake","月餅",S8],["fallst","秋季貼紙",S7,"guess"]]},
+ {id:"eperm",zh:"任天堂帳號連動",period:"常駐",start:"",end:"",where:"綁定 Nintendo 帳號取得。",items:[["mariohat","瑪利歐帽","b"]]}
+];
+
+var LS_KEY="pikmin-standalone-v1";
+var state=blank();
+var dbDoc=null, remoteReady=false, saveTimer=null;
+var brushS=3;
+var cells=new Map(); // key -> {s,d,ab,pl}
+
+function blank(){return {v:2,ts:0,cells:[],notes:{},custom:[],cev:[],seeds:[],unk:[],plain:0,game:0,grpMap:{A:"",B:"",C:""},opt:{rare:false,jp:false}};}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function todayStr(){var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function normalize(d){
+  var s=blank();
+  if(!d||typeof d!=="object") return s;
+  if(Array.isArray(d.cells)){
+    s.cells=d.cells.filter(function(x){return x&&typeof x.k==="string"&&x.s>=1&&x.s<=4;}).map(function(x){
+      return {k:x.k,s:Number(x.s),n:(x.n==null?(Number(x.s)===3?1:0):Math.max(0,Number(x.n)||0)),d:String(x.d||""),ab:!!x.ab,pl:String(x.pl||""),re:String(x.re||"")};});
+  }else if(Array.isArray(d.owned)){ // 第一版資料轉換
+    s.cells=d.owned.filter(function(x){return typeof x==="string";}).map(function(k){return {k:k,s:3,d:"",ab:false,pl:""};});
+  }
+  if(d.notes&&typeof d.notes==="object") s.notes=Object.assign({},d.notes);
+  if(Array.isArray(d.custom)) s.custom=d.custom.filter(function(x){return x&&typeof x==="object";}).map(function(x){
+    var st=(typeof x.s==="number")?x.s:(x.owned?3:0);
+    return {id:String(x.id||uid()),name:String(x.name||""),color:String(x.color||""),origin:String(x.origin||""),s:st};});
+  if(Array.isArray(d.cev)) s.cev=d.cev.filter(function(x){return x&&typeof x==="object"&&Array.isArray(x.items);}).map(function(x){
+    return {id:String(x.id),zh:String(x.zh||""),end:String(x.end||""),items:x.items.filter(Array.isArray).map(function(i){return [String(i[0]),String(i[1]),String(i[2])];})};});
+  if(d.opt&&typeof d.opt==="object") s.opt={rare:!!d.opt.rare,jp:!!d.opt.jp};
+  if(Array.isArray(d.seeds)) s.seeds=d.seeds.filter(function(x){return x&&typeof x==="object"&&x.cat;}).map(function(x){
+    return {id:String(x.id||uid()),cat:String(x.cat),col:String(x.col||"huge"),cos:String(x.cos||""),org:String(x.org||""),st:Number(x.st)||0,note:String(x.note||""),gr:!!x.gr,grp:String(x.grp||"")};});
+  s.grpMap=(d.grpMap&&typeof d.grpMap==="object")?{A:String(d.grpMap.A||""),B:String(d.grpMap.B||""),C:String(d.grpMap.C||"")}:{A:"",B:"",C:""};
+  if(Array.isArray(d.unk)) s.unk=d.unk.filter(function(x){return x&&typeof x==="object"&&x.cat;}).map(function(x){return {id:String(x.id||uid()),cat:String(x.cat),col:String(x.col||""),cos:String(x.cos||""),s:Number(x.s)||1,d:String(x.d||""),ab:!!x.ab,pl:String(x.pl||""),re:String(x.re||"")};});
+  s.plain=Math.max(0,Number(d.plain)||0); s.game=Math.max(0,Number(d.game)||0);
+  s.ts=Number(d.ts)||0;
+  return s;
+}
+function sameData(a,b){var f=function(s){return JSON.stringify([s.cells,s.custom,s.cev,s.notes,s.seeds,s.unk,s.plain,s.game]);}; return f(a)===f(b);}
+function unkInfo(u){var g=catById(u.cat); return g?{g:g,it:["?",u.cos==="st_any"?"貼紙（顏色未確認）":"款式未確認",""],col:u.col}:null;}
+function getP(k){ if(k.indexOf("u:")===0){var id=k.slice(2); return (state.unk||[]).find(function(x){return x.id===id;});} return cells.get(k); }
+function keepPrev(){dumpCells(); try{localStorage.setItem(LS_KEY+"-prev",JSON.stringify(state));}catch(e){}}
+function showPrev(){var has=false; try{has=!!localStorage.getItem(LS_KEY+"-prev");}catch(e){} var b=document.getElementById("prevBox"); if(b) b.hidden=!has;}
+function loadCells(){cells=new Map(); state.cells.forEach(function(c){cells.set(c.k,{s:c.s,n:(c.n==null?(c.s===3?1:0):c.n),d:c.d,ab:c.ab,pl:c.pl,re:c.re||""});});}
+function dumpCells(){var a=[]; cells.forEach(function(v,k){a.push({k:k,s:v.s,n:(v.s===3?(v.n==null?1:v.n):0),d:v.d||"",ab:!!v.ab,pl:v.pl||"",re:v.re||""});}); state.cells=a;}
+function hasData(s){return s.cells.length>0||s.custom.length>0||s.cev.length>0||Object.keys(s.notes).length>0;}
+function cs(k){var c=cells.get(k); return c?c.s:0;}
+
+var EMBED={"cells": [{"ab": false, "d": "", "k": "restaurant~chef~r", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "restaurant~chef~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "restaurant~chef~i", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "cafe~cup~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "cafe~cup~p", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "cafe~cup~i", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "pharmacy~tooth~i", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "forest~stag~b", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "forest~stag~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "forest~stag~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "forest~acorn~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "forest~acorn~y", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "water~lure~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "water~lure~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "water~lure~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "post~stamp~b", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "airport~plane~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "station~train~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "station~ticket~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "station~ticket~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "burger~burger~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "corner~cap~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "corner~cap~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "super~mushroom~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "super~banana~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "super~banana~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bakery~pastry~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "hair~scissors~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "clothes~hairtie~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "park~clover~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "library~book~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~coin~y", "n": 3, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~coin~b", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~coin~p", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~coin~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~coin~r", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bus~bus~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bus~bus~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bus~bus~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "italian~pasta~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "ramen~ramen~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bridge~brpin~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "makeup~makeup~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "diy~tool~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "korean~kimchi~r", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "korean~kimchi~b", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "korean~kimchi~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "korean~kimchi~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "stationery~stationery~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~htreat~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~htreat~b", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~htreat~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~htreat~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~hlight~y", "n": 5, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~hlight~b", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~hlight~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~b", "n": 3, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~w", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~k", "n": 3, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~i", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2609~wurst~b", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2609~wurst~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2609~wurst~i", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2609~wurst~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2609~mooncake~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2609~mooncake~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": true, "d": "2026-10-28", "k": "cafe~cup~r", "n": 0, "pl": "스타벅스 중동（釜山）", "re": "2026-11-07T17:36", "s": 2}, {"ab": true, "d": "2026-10-28", "k": "water~lure~b", "n": 0, "pl": "중동（釜山）", "re": "2026-11-08T15:37", "s": 2}, {"ab": true, "d": "2026-10-28", "k": "burger~burger~b", "n": 1, "pl": "맘스터치 중동（釜山）", "re": "", "s": 3}, {"ab": true, "d": "2026-10-28", "k": "makeup~makeup~y", "n": 0, "pl": "뷰티랜드 초량동（釜山）", "re": "2026-11-09T22:38", "s": 2}, {"ab": true, "d": "2026-10-28", "k": "korean~kimchi~y", "n": 1, "pl": "언양불고기 중동（釜山）", "re": "", "s": 3}, {"ab": true, "d": "2026-10-28", "k": "stationery~stationery~y", "n": 0, "pl": "다이소 우동（釜山）", "re": "2026-11-06T12:38", "s": 2}, {"ab": false, "d": "2026-10-30", "k": "water~lure~r", "n": 1, "pl": "福興鄉", "re": "", "s": 3}, {"ab": false, "d": "2026-10-30", "k": "water~lure~p", "n": 1, "pl": "公司田溪 淡水區", "re": "", "s": 3}, {"ab": false, "d": "2026-10-28", "k": "station~ticket~i", "n": 1, "pl": "淡水行政 淡水區", "re": "", "s": 3}, {"ab": false, "d": "2026-10-28", "k": "park~clover~g", "n": 1, "pl": "淡水河口 淡水區", "re": "", "s": 3}, {"ab": false, "d": "2026-10-28", "k": "ramen~ramen~p", "n": 1, "pl": "老街客棧 鹿港鎮", "re": "", "s": 3}, {"ab": true, "d": "2026-10-28", "k": "stationery~stationery~i", "n": 1, "pl": "칠성화이 전포동（釜山）", "re": "2026-11-02T13:39", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_g~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_g~i", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_b~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_b~b", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_b~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_b~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_o~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~st_o~k", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-10-28", "k": "forest~stag~i", "n": 1, "pl": "암남공원 암남동（釜山）", "re": "", "s": 3}, {"ab": false, "d": "", "k": "ramen~ramen~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "ramen~ramen~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "art~frame~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "park~four~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "themepark~tp_ship~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "super~banana~y", "n": 1, "pl": "家樂福（推定）", "re": "", "s": 3}, {"ab": false, "d": "2026-10-28", "k": "bakery~baguette~w", "n": 1, "pl": "", "re": "2026-10-29T04:42", "s": 3}, {"ab": true, "d": "2026-10-28", "k": "corner~cap~b", "n": 0, "pl": "GS25 우동（釜山）", "re": "2026-11-08T07:42", "s": 2}, {"ab": false, "d": "2026-10-28", "k": "forest~stag~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~glass~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~htreat~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2609~fallst~g", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-10-29", "k": "italian~pizza~b", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-10-29", "k": "forest~acorn~k", "n": 1, "pl": "淡水區", "re": "", "s": 3}, {"ab": false, "d": "2026-10-29", "k": "cafe~cup~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "restaurant~chef~y", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "station~train~r", "n": 2, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bus~bus~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bus~bus~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-10-30", "k": "bridge~brpin~p", "n": 1, "pl": "東西向快速道路 八里區", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bakery~baguette~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "beach~shell~p", "n": 1, "pl": "鹿港鎮", "re": "", "s": 3}, {"ab": false, "d": "2026-10-30", "k": "italian~pasta~p", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "sushi~sushi~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "park~four~k", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "pharmacy~tooth~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-10-30", "k": "italian~pasta~w", "n": 1, "pl": "關渡", "re": "", "s": 3}, {"ab": false, "d": "2026-11-02", "k": "bus~bus~g", "n": 1, "pl": "福興鄉", "re": "2026-11-03T03:46", "s": 3}, {"ab": false, "d": "", "k": "appliance~battery3~y", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "roadside~coin~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-10-30", "k": "forest~acorn~i", "n": 1, "pl": "林口區", "re": "", "s": 3}, {"ab": false, "d": "", "k": "bus~bus~b", "n": 1, "pl": "樹林區", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~htreat~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-10-31", "k": "library~book~r", "n": 0, "pl": "淡水墊腳石", "re": "", "s": 4}, {"ab": false, "d": "2026-11-04", "k": "library~book~b", "n": 1, "pl": "淡水墊腳石附近", "re": "", "s": 3}, {"ab": false, "d": "2026-10-31", "k": "makeup~makeup~k", "n": 1, "pl": "樹林區", "re": "", "s": 3}, {"ab": false, "d": "2026-10-31", "k": "korean~kimchi~i", "n": 1, "pl": "神仙盧附近", "re": "", "s": 3}, {"ab": false, "d": "2026-10-31", "k": "ramen~ramen~b", "n": 1, "pl": "北投滿漢鵝肉附近", "re": "", "s": 3}, {"ab": false, "d": "2026-10-31", "k": "station~train~p", "n": 1, "pl": "淡水區", "re": "", "s": 3}, {"ab": false, "d": "2026-10-31", "k": "cafe~cup~k", "n": 0, "pl": "北投區", "re": "", "s": 1}, {"ab": false, "d": "2026-10-31", "k": "restaurant~chef~w", "n": 0, "pl": "中正區農人餐桌附近", "re": "", "s": 1}, {"ab": false, "d": "", "k": "e2610~hlight~r", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2610~hlight~w", "n": 4, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-11-01", "k": "station~train~k", "n": 0, "pl": "北投區", "re": "", "s": 1}, {"ab": false, "d": "2026-11-01", "k": "station~ticket~k", "n": 0, "pl": "淡水區", "re": "", "s": 1}, {"ab": false, "d": "2026-11-01", "k": "super~banana~b", "n": 0, "pl": "淡水美聯社附近", "re": "", "s": 1}, {"ab": false, "d": "2026-11-01", "k": "library~book~y", "n": 0, "pl": "信宜太陽親子館", "re": "", "s": 1}, {"ab": false, "d": "2026-11-01", "k": "forest~acorn~p", "n": 0, "pl": "北投", "re": "", "s": 1}, {"ab": false, "d": "", "k": "e2611~jewel5~i", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "2026-11-02", "k": "forest~stag~p", "n": 0, "pl": "淡水", "re": "", "s": 1}, {"ab": false, "d": "2026-11-02", "k": "post~stamp~g", "n": 0, "pl": "淡水", "re": "", "s": 1}, {"ab": false, "d": "2026-11-02", "k": "forest~acorn~w", "n": 0, "pl": "淡水學府里", "re": "", "s": 1}, {"ab": false, "d": "2026-11-03", "k": "roadside~st_g~w", "n": 1, "pl": "", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2611~cupcake3~r", "n": 1, "pl": "淡水", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2611~cupcake3~p", "n": 1, "pl": "淡水", "re": "", "s": 3}, {"ab": false, "d": "2026-11-01", "k": "roadside~coin~k", "n": 0, "pl": "北投", "re": "", "s": 1}, {"ab": false, "d": "", "k": "park~clover~r", "n": 1, "pl": "紅色皮克敏 北投區", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2611~flowerbox4~y", "n": 2, "pl": "樹梅坑溪、埤島里", "re": "", "s": 3}, {"ab": false, "d": "", "k": "e2611~jewel5~g", "n": 2, "pl": "竹圍原汁", "re": "", "s": 3}, {"ab": false, "d": "", "k": "restaurant~chef~k", "n": 1, "pl": "淡水區", "re": "", "s": 3}], "cev": [], "custom": [{"color": "y", "id": "mvxp73xqmxt3j", "name": "五週年紀念玩具珠寶", "origin": "淡水", "s": 0}], "game": 187, "grpMap": {"A": "", "B": "", "C": ""}, "notes": {"bakery": "釜山", "corner": "釜山"}, "opt": {"jp": false, "rare": false}, "plain": 5, "seeds": [{"cat": "roadside", "col": "huge", "cos": "st_any", "gr": false, "grp": "B", "id": "s17931753653950", "note": "", "org": "頭份市", "st": 10000}, {"cat": "roadside", "col": "huge", "cos": "st_any", "gr": false, "grp": "B", "id": "s17931753653951", "note": "", "org": "北投區", "st": 10000}, {"cat": "cafe", "col": "huge", "cos": "", "gr": false, "grp": "", "id": "s179317536539512", "note": "", "org": "彰化市", "st": 10000}, {"cat": "forest", "col": "huge", "cos": "stag", "gr": false, "grp": "", "id": "s179317536539514", "note": "", "org": "淡水區", "st": 10000}, {"cat": "roadside", "col": "r", "cos": "st_any", "gr": false, "grp": "A", "id": "s179317536539522", "note": "", "org": "淡水區柑真理", "st": 1000}, {"cat": "roadside", "col": "g", "cos": "st_any", "gr": false, "grp": "A", "id": "s179317536539523", "note": "", "org": "淡水區埤島里", "st": 5000}, {"cat": "roadside", "col": "i", "cos": "st_any", "gr": false, "grp": "A", "id": "s179317536539524", "note": "排在新冰後面、白色前面，暫定 A 組", "org": "造橋鄉", "st": 5000}, {"cat": "roadside", "col": "i", "cos": "st_any", "gr": false, "grp": "B", "id": "s179317536539526", "note": "", "org": "淡水區", "st": 5000}, {"cat": "station", "col": "i", "cos": "ticket", "gr": false, "grp": "", "id": "mvuleof5alu3w", "note": "", "org": "關渡", "st": 5000}, {"cat": "forest", "col": "huge", "cos": "acorn", "gr": false, "grp": "", "id": "mvv1ez8uddp2l", "note": "", "org": "淡水區", "st": 10000}, {"cat": "roadside", "col": "r", "cos": "st_any", "gr": false, "grp": "A", "id": "mvv1tx6280shs", "note": "", "org": "淡水台灣中油附近", "st": 1000}, {"cat": "roadside", "col": "g", "cos": "st_any", "gr": false, "grp": "A", "id": "mvv4obs1fqevx", "note": "", "org": "淡水埤島里", "st": 5000}, {"cat": "roadside", "col": "huge", "cos": "coin", "gr": false, "grp": "", "id": "mvv8sgfxqwjv8", "note": "", "org": "淡水區", "st": 10000}, {"cat": "forest", "col": "huge", "cos": "acorn", "gr": false, "grp": "", "id": "mvxb36gch7tu7", "note": "", "org": "淡水", "st": 10000}, {"cat": "station", "col": "r", "cos": "train", "gr": false, "grp": "", "id": "mvxouapv9vtsg", "note": "", "org": "淡水", "st": 1000}, {"cat": "station", "col": "huge", "cos": "train", "gr": false, "grp": "", "id": "mvz3si1f0g9w1", "note": "", "org": "北投", "st": 10000}, {"cat": "roadside", "col": "w", "cos": "coin", "gr": false, "grp": "", "id": "mvz4408ssq8xa", "note": "", "org": "北投", "st": 3000}, {"cat": "roadside", "col": "w", "cos": "st_any", "gr": false, "grp": "B", "id": "mvzzlhd5f8fho", "note": "", "org": "淡水區", "st": 3000}, {"cat": "post", "col": "g", "cos": "", "gr": false, "grp": "", "id": "mvzzm8che3t3f", "note": "", "org": "淡水", "st": 5000}, {"cat": "e2610", "col": "gold", "cos": "glass", "gr": false, "grp": "", "id": "mw04ukm9eay2l", "note": "", "org": "淡水", "st": 100}, {"cat": "e2610", "col": "gold", "cos": "glass", "gr": false, "grp": "", "id": "mw04unlqztnjf", "note": "", "org": "淡水", "st": 100}, {"cat": "roadside", "col": "b", "cos": "st_any", "gr": false, "grp": "A", "id": "mw06qdkvbbarx", "note": "", "org": "淡水", "st": 1000}, {"cat": "roadside", "col": "g", "cos": "st_any", "gr": false, "grp": "A", "id": "mw09o7z3xlgnl", "note": "", "org": "淡水埤島里", "st": 5000}, {"cat": "roadside", "col": "k", "cos": "coin", "gr": false, "grp": "", "id": "mvyvrutgrhwv3", "note": "", "org": "北投", "st": 5000}, {"cat": "bakery", "col": "k", "cos": "", "gr": false, "grp": "", "id": "s1793760721748a", "note": "", "org": "北投區", "st": 5000}, {"cat": "water", "col": "g", "cos": "", "gr": false, "grp": "", "id": "s1793760721748b", "note": "", "org": "淡水區", "st": 5000}, {"cat": "roadside", "col": "huge", "cos": "coin", "gr": false, "grp": "", "id": "s1793760721748c", "note": "依排序推定是硬幣", "org": "淡水區", "st": 10000}, {"cat": "art", "col": "b", "cos": "", "gr": false, "grp": "", "id": "mw1n3uzkx5245", "note": "", "org": "北投區", "st": 1000}, {"cat": "roadside", "col": "i", "cos": "st_any", "gr": false, "grp": "A", "id": "mw1rczqbiun52", "note": "排在造橋鄉冰前面，暫定 A 組", "org": "淡水", "st": 5000}, {"cat": "bakery", "col": "b", "cos": "", "gr": true, "id": "mw1rxxwisr4vw", "note": "", "org": "北投", "st": 1000}], "ts": 1793780923861, "unk": [{"ab": false, "cat": "roadside", "col": "p", "cos": "st_any", "d": "2026-11-03", "id": "mw074cll6rst3", "pl": "淡水區", "re": "", "s": 1}, {"ab": false, "cat": "park", "col": "i", "cos": "", "d": "2026-11-03", "id": "mw075gsxrtowz", "pl": "淡水公八", "re": "", "s": 1}], "v": 2};
+var EMB=normalize(EMBED);
+try{var raw=localStorage.getItem(LS_KEY); var loc=raw?normalize(JSON.parse(raw)):null; state=(loc&&(loc.ts||0)>(EMB.ts||0))?loc:EMB;}catch(e){state=EMB;}
+loadCells();
+
+var $=function(id){return document.getElementById(id);};
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c];});}
+function setStatus(t){$("saveStatus").textContent=t;}
+var toastT=null;
+function toast(t){var el=$("toast"); el.textContent=t; el.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(function(){el.classList.remove("show");},2600);}
+function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
+function pushRemote(){
+  if(!dbDoc) return;
+  dbDoc.set(state).then(function(){setStatus("已儲存到你的帳號");},function(){setStatus("同步失敗，已先存在這台裝置");});
+}
+function scheduleSave(){
+  dumpCells(); state.ts=Date.now(); saveLocal();
+  if(!dbDoc){setStatus(remoteReady?"已存在這台裝置的瀏覽器":"已暫存");return;}
+  setStatus("儲存中…");
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(function(){saveTimer=null; pushRemote();},700);
+}
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState==="hidden"&&saveTimer){clearTimeout(saveTimer); saveTimer=null; pushRemote();}
+});
+
+/* ---------- 群組資料 ---------- */
+function isRare(it){return (it[3]||"").indexOf("rare")>-1;}
+function isGuess(it){return (it[3]||"").indexOf("guess")>-1;}
+function locGroups(){return CATS.filter(function(c){return !c.jp||state.opt.jp;});}
+function evGroups(){
+  var custom=state.cev.map(function(e){return {id:e.id,zh:e.zh,period:e.end?("至 "+e.end.replace(/-/g,"/")):"自訂活動",start:"",end:e.end,where:"自訂",items:e.items,custom:true};});
+  return custom.concat(EVENTS);
+}
+function gKey(g,it,col){return g.id+"~"+it[0]+"~"+col;}
+function gItems(g){return g.items.filter(function(it){return !isRare(it)||state.opt.rare;});}
+function gStats(g){
+  var t=0,o=0,p=0;
+  gItems(g).forEach(function(it){it[2].split("").forEach(function(col){
+    if(!CMAP[col]) return; t++; var s=cs(gKey(g,it,col)); if(s===3)o++; else if(s>0)p++;});});
+  return {t:t,o:o,p:p};
+}
+function evStatus(g){
+  if(!g.end) return null;
+  var now=new Date(), st=g.start?new Date(g.start+"T00:00:00"):null, en=new Date(g.end+"T23:59:59");
+  if(st&&now<st) return {k:"soon",t:"即將開始"};
+  if(now>en) return {k:"over",t:"已結束"};
+  var left=Math.ceil((en-now)/86400000);
+  return {k:"live",t:"進行中・剩 "+left+" 天",left:left};
+}
+function lookup(){
+  var m={};
+  locGroups().concat(evGroups()).forEach(function(g){g.items.forEach(function(it){it[2].split("").forEach(function(col){
+    m[gKey(g,it,col)]={g:g,it:it,col:col};});});});
+  // 也包含被隱藏的（日本限定）
+  CATS.forEach(function(g){g.items.forEach(function(it){it[2].split("").forEach(function(col){var k=gKey(g,it,col); if(!m[k]) m[k]={g:g,it:it,col:col};});});});
+  return m;
+}
+
+/* ---------- 繪製 ---------- */
+function renderCount(){
+  var dec=0,pend=0,ex=0,exAb=0,w4=0,g1=0;
+  cells.forEach(function(v){ if(v.s===3) dec+=(v.n==null?1:v.n); else if(isPend(v.s)){ pend++; if(v.s===2){ex++; if(v.ab) exAb++;} else if(v.s===4) w4++; else g1++; } });
+  state.custom.forEach(function(x){ if(x.s===3) dec++; else if(isPend(x.s)){ pend++; if(x.s===2){ex++; if(/國外/.test(x.origin||"")) exAb++;} else if(x.s===4) w4++; else g1++; } });
+  (state.unk||[]).forEach(function(u){ if(isPend(u.s)){ pend++; if(u.s===2){ex++; if(u.ab) exAb++;} else if(u.s===4) w4++; else g1++; } });
+  $("cntExp").textContent=ex;
+  $("expSum").textContent="探險中 "+ex+" 隻（國外 "+exAb+"）・待出發 "+w4+" 隻・培養中 "+g1+" 隻";
+  var tot=dec+pend+(state.plain||0);
+  $("cntTot").textContent=tot; $("cntDec").textContent=dec; $("cntPend").textContent=pend; $("cntPlain").textContent=state.plain||0;
+  if(document.activeElement!==$("gameN")) $("gameN").value=state.game||"";
+  var diff=state.game?(state.game-tot):null;
+  $("cntDiff").textContent=diff===null?"":(diff===0?"✓ 跟遊戲一樣":(diff>0?"還少記 "+diff+" 隻":"多記了 "+(-diff)+" 隻"));
+}
+function renderMeters(){
+  renderCount();
+  var per={}; COLORS.forEach(function(c){per[c.k]={t:0,o:0};});
+  var T=0,O=0,P=0;
+  locGroups().concat(evGroups()).forEach(function(g){gItems(g).forEach(function(it){it[2].split("").forEach(function(col){
+    if(!per[col]) return; per[col].t++; T++; var s=cs(gKey(g,it,col)); if(s===3){per[col].o++;O++;} else if(s>0)P++;});});});
+  $("ownedN").textContent=O; $("totalN").textContent=T;
+  var pc=0; cells.forEach(function(v){if(isPend(v.s))pc++;});
+  state.custom.forEach(function(x){if(isPend(x.s))pc++;});
+  (state.unk||[]).forEach(function(u){if(isPend(u.s))pc++;});
+  $("pendN").textContent=pc?("進行中 "+pc):"";
+  $("progCnt").textContent=pc?pc:"";
+  var have={}, away={}; COLORS.forEach(function(c){have[c.k]=0; away[c.k]=0;});
+  cells.forEach(function(v,k){var col=k.split("~")[2]; if(!(col in have)) return;
+    if(v.s===3) have[col]+=(v.n==null?1:v.n); else if(v.s===1||v.s===4) have[col]++; else if(v.s===2) away[col]++;});
+  state.custom.forEach(function(x){if(!(x.color in have)) return; if(x.s===3||x.s===1||x.s===4) have[x.color]++; else if(x.s===2) away[x.color]++;});
+  (state.unk||[]).forEach(function(u){if(!(u.col in have)) return; if(u.s===1||u.s===4) have[u.col]++; else if(u.s===2) away[u.col]++;});
+  $("meters").innerHTML=COLORS.map(function(c){
+    var p=per[c.k], pct=p.t?Math.round(p.o/p.t*100):0;
+    return '<div class="meter" style="--mc:var(--c-'+c.k+')" title="'+c.full+'：飾品種類 '+p.o+' / '+p.t+'，在身邊 '+have[c.k]+' 隻，探險中 '+away[c.k]+' 隻"><div class="tube"><span style="height:'+pct+'%"></span></div><div class="lab">'+c.zh+'</div><div class="num">種類 '+p.o+'/'+p.t+'</div><div class="num" style="color:var(--ink);font-weight:700">'+have[c.k]+' 隻</div></div>';
+  }).join("")+'';
+  var SH=[["火菇","r"],["電菇","y"],["水菇","b"],["毒菇","w"],["水晶菇","k"]];
+  $("shroom").innerHTML='<span class="shh">屬性菇（只能派同色；一般 10 隻、大菇 15 隻起）</span>'+SH.map(function(x){
+    var n=have[x[1]], ok15=n>=15, ok10=n>=10;
+    return '<span class="shi '+(ok15?"ok":(ok10?"mid":"no"))+'"><i class="sw" style="--dc:var(--c-'+x[1]+')"></i>'+x[0]+' '+n+' 隻：'+(ok15?"大菇 OK":(ok10?"大菇差 "+(15-n)+" 隻":"差 "+(10-n)+" 隻"))+'</span>';
+  }).join("");
+  $("meterNote").textContent="每色下方：「種類」是飾品收集進度；「N 隻」是在身邊、可以派去打菇的隻數（飾品＋培養中＋待出發，不含探險中；「一般」那些沒有顏色記錄，不在內）。";
+}
+
+var colF="";
+function gItemsC(g){var its=gItems(g); return colF?its.filter(function(it){return it[2].indexOf(colF)>-1;}):its;}
+function gStatsC(g){
+  if(!colF) return gStats(g);
+  var t=0,o=0,p=0;
+  gItemsC(g).forEach(function(it){t++; var s=cs(gKey(g,it,colF)); if(s===3)o++; else if(s>0)p++;});
+  return {t:t,o:o,p:p};
+}
+function dotHtml(g,it,col){
+  if(colF&&col.k!==colF) return '';
+  if(it[2].indexOf(col.k)<0) return '<span class="gap" aria-hidden="true"></span>';
+  var k=gKey(g,it,col.k), s=cs(k);
+  var cv=cells.get(k), n=(s===3&&cv)?(cv.n==null?1:cv.n):0;
+  var gl=s===3?(n>=2?String(n):"✓"):(SGLYPH[s]||col.zh);
+  return '<button class="dot'+(col.lt?' lt':'')+(s===3&&n===0?' zero':'')+'" style="--dc:var(--c-'+col.k+')" data-k="'+esc(k)+'" data-s="'+s+'" aria-label="'+esc(g.zh+' '+it[1]+(isRare(it)?'（稀有）':'')+' '+col.full+'：'+SNAME[s]+(s===3?'，目前 '+n+' 隻':''))+'">'+gl+'</button>';
+}
+function daysSince(d){if(!d) return null; return Math.max(0,Math.floor((new Date(todayStr()+"T00:00:00")-new Date(d+"T00:00:00"))/86400000));}
+function daysUntil(d){return Math.round((new Date(d+"T00:00:00")-new Date(todayStr()+"T00:00:00"))/86400000);}
+function pad2(x){return String(x).padStart(2,"0");}
+function addDays(n){var d=new Date(Date.now()+n*86400000); return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())+"T"+pad2(d.getHours())+":"+pad2(d.getMinutes());}
+function reDate(re){return new Date(re.indexOf("T")>-1?re:re+"T00:00:00");}
+function remainMs(re){return reDate(re)-new Date();}
+function remainDH(re){var ms=remainMs(re); if(ms<=0) return {d:0,h:0}; var t=Math.ceil(ms/3600000); return {d:Math.floor(t/24),h:t%24};}
+function remainLabel(re,sp){
+  if(remainMs(re)<=0) return "可以領了";
+  var r=remainDH(re);
+  return "剩"+sp+(r.d?r.d+sp+"天"+(r.h?sp:""):"")+(r.h?r.h+sp+"小時":"");
+}
+function fmtRe(re){var t=reDate(re); return (t.getMonth()+1)+"/"+t.getDate()+(re.indexOf("T")>-1?" "+pad2(t.getHours())+":"+pad2(t.getMinutes()):"");}
+function pendText(v){
+  if(v.s===2&&v.re) return remainLabel(v.re,"");
+  if(v.s===2) return "未填天數";
+  var n=daysSince(v.d); return n===null?"":(n===0?"今天":n+"天");
+}
+function rowName(g,it,idx){
+  var tags=(isRare(it)?'<span class="tag rare" title="稀有：很難再拿，建議至少留 1 隻">稀有・留 1</span>':'')+(isGuess(it)?'<span class="tag q" title="此列可取得的顏色是推定，請以遊戲內為準">?</span>':'')+
+    (g.custom?'<button class="xdel" data-cevdel="'+esc(g.id)+'" data-idx="'+idx+'">刪除</button>':'');
+  var pb=it[2].split("").map(function(col){
+    var v=cells.get(gKey(g,it,col)); if(!v||!isPend(v.s)||!CMAP[col]) return "";
+    return '<span class="pb" title="'+CMAP[col].full+'：'+SNAME[v.s]+'"><i class="sw" style="--dc:var(--c-'+col+')"></i>'+SGLYPH[v.s]+' '+pendText(v)+'</span>';
+  }).join("");
+  return esc(it[1])+tags+pb;
+}
+function progDays(v){
+  var n=daysSince(v.d);
+  if(v.s===2&&v.re){
+    return esc(remainLabel(v.re," "))+'<small>預計 '+esc(fmtRe(v.re))+' 回來'+(n===null?'':'・已出發 '+n+' 天')+'</small>';
+  }
+  if(v.s===2) return '未填<small>請在下方填「還要幾天」</small>';
+  return (n===null?'—':(n===0?'今天':n+' 天'))+'<small>'+(v.s===2?'已出發':(v.s===4?'滿 4 心後':'已培養'))+'</small>';
+}
+function cardHtml(g,opts){
+  var items=gItemsC(g), s=gStatsC(g), done=s.t>0&&s.o===s.t;
+  var head='<h2>'+esc(g.zh)+(g.en?'<small>'+esc(g.en)+'</small>':'');
+  if(opts.ev){var es=evStatus(g); if(es) head+='<span class="status '+es.k+'">'+es.t+'</span>';}
+  head+='</h2>';
+  var sub=opts.ev?(esc(g.period||"")+(g.where?'。'+esc(g.where):'')+'<br><b>限定飾品：之後同類活動常會讓牠們打菇變強，建議每色至少留 1 隻。</b>'):esc(g.where);
+  var h='<section class="cat'+(done?' done':'')+'" data-g="'+esc(g.id)+'"><div class="cat-head"><div>'+head+'<p class="where">'+sub+'</p></div><span class="prog">'+s.o+' / '+s.t+'</span></div>';
+  items.forEach(function(it,idx){
+    h+='<div class="row"><div class="cname">'+rowName(g,it,idx)+'</div><div class="dots">';
+    COLORS.forEach(function(col){h+=dotHtml(g,it,col);});
+    h+='</div></div>';
+  });
+  if(!opts.ev) h+='<label class="origin">產地備註<input data-note="'+esc(g.id)+'" value="'+esc(state.notes[g.id]||"")+'" placeholder="具體地點，例：桃園機場、台北車站"></label>';
+  return h+'</section>';
+}
+function renderList(){
+  var q=$("q").value.trim().toLowerCase(), st=$("status").value, html="";
+  locGroups().forEach(function(c){
+    if(colF&&!gItemsC(c).length) return;
+    var s=gStatsC(c), done=s.t>0&&s.o===s.t;
+    if(st==="has"&&s.o===0) return;
+    if(st==="todo"&&done) return;
+    if(st==="done"&&!done) return;
+    if(q){var hay=(c.zh+" "+c.en+" "+c.where+" "+c.items.map(function(i){return i[1];}).join(" ")+" "+(state.notes[c.id]||"")).toLowerCase(); if(hay.indexOf(q)<0) return;}
+    html+=cardHtml(c,{});
+  });
+  $("list").innerHTML=html||'<p class="empty">沒有符合條件的地點。換個關鍵字，或把顯示條件改成「全部地點」。</p>';
+}
+function renderEvents(){
+  var st=$("evStatus").value, html="";
+  evGroups().forEach(function(g){
+    if(colF&&!gItemsC(g).length) return;
+    var s=gStatsC(g), es=evStatus(g);
+    if(st==="live"&&!(es&&es.k==="live")) return;
+    if(st==="todo"&&s.t>0&&s.o===s.t) return;
+    html+=cardHtml(g,{ev:true});
+  });
+  $("evList").innerHTML=html||'<p class="empty">沒有符合條件的活動。</p>';
+}
+
+function missingCols(g,it){return it[2].split("").filter(function(col){return CMAP[col]&&cs(gKey(g,it,col))===0;});}
+function needHtml(list){
+  return '<div class="need">'+list.map(function(x){
+    return '<span>'+esc(x.name)+'：'+x.cols.map(function(c){return '<i class="sw" style="--dc:var(--c-'+c+')"></i>'+CMAP[c].zh;}).join(" ")+'</span>';
+  }).join("")+'</div>';
+}
+function renderTips(){
+  var out=[];
+  // ① 進行中的活動
+  evGroups().forEach(function(g){
+    var es=evStatus(g); if(!es||es.k!=="live") return;
+    var need=[]; gItems(g).forEach(function(it){var m=missingCols(g,it); if(m.length) need.push({name:it[1],cols:m});});
+    if(!need.length) return;
+    out.push({tier:1,score:1000-es.left,title:"限時活動：「"+g.zh+"」",why:"剩 "+es.left+" 天結束。"+(g.where||""),need:need});
+  });
+  // ②③ 地點
+  locGroups().forEach(function(g){
+    var need=[],miss=0;
+    gItems(g).forEach(function(it){var m=missingCols(g,it); if(m.length){need.push({name:it[1],cols:m}); miss+=m.length;}});
+    if(!miss) return;
+    if(g.id==="roadside"){out.push({tier:3,score:-999,title:"路邊（"+g.where+"）",why:"路邊飾品最常見，隨時都拿得到，可排最後。還缺 "+miss+" 個。",need:need});return;}
+    if(miss<=3){
+      out.push({tier:2,score:100-miss,title:g.zh+"：只差 "+miss+" 個",why:(RARE_UNLOCK[g.id]?"收齊後可開啟這個地點的稀有飾品等級。":"快收齊了。")+(state.notes[g.id]?" 你的產地備註："+state.notes[g.id]:""),need:need});
+    }else{
+      out.push({tier:3,score:-miss,title:g.zh,why:"還缺 "+miss+" 個。",need:need});
+    }
+  });
+  out.sort(function(a,b){return a.tier-b.tier||b.score-a.score;});
+  var top=out.slice(0,12);
+  $("tips").innerHTML=top.length?top.map(function(t){
+    return '<div class="tip t'+t.tier+'"><h3>'+esc(t.title)+'</h3><p class="why">'+esc(t.why)+'</p>'+needHtml(t.need)+'</div>';
+  }).join("")+(out.length>12?'<p class="legend">另有 '+(out.length-12)+' 個地點還沒收齊，可到「地點飾品」查看。</p>':''):
+  '<p class="empty">目前沒有缺少的項目，或都已經在培養／探險中了。</p>';
+}
+
+function renderProg(){
+  var cnt={all:0,"2":0,"4":0,"1":0,ab:0}, L0=lookup();
+  cells.forEach(function(v,k){ if(!isPend(v.s)) return; var inf=L0[k]; if(!inf) return; if(colF&&inf.col!==colF) return; cnt.all++; cnt[String(v.s)]=(cnt[String(v.s)]||0)+1; if(v.ab) cnt.ab++; });
+  (state.unk||[]).forEach(function(u){ if(!isPend(u.s)) return; if(colF&&u.col!==colF) return; cnt.all++; cnt[String(u.s)]=(cnt[String(u.s)]||0)+1; if(u.ab) cnt.ab++; });
+  var fv=$("pFilter").value;
+  $("pChips").innerHTML=[["all","全部"],["2","探險中"],["4","待出發"],["1","培養中"],["ab","國外"]].map(function(x){return '<button class="bbtn" data-pf2="'+x[0]+'" aria-pressed="'+(fv===x[0])+'">'+x[1]+' '+cnt[x[0]]+'</button>';}).join("");
+  var f=$("pFilter").value, L=lookup(), list=[];
+  cells.forEach(function(v,k){
+    if(!isPend(v.s)) return;
+    if(f==="1"&&v.s!==1) return;
+    if(f==="2"&&v.s!==2) return;
+    if(f==="4"&&v.s!==4) return;
+    if(f==="ab"&&!v.ab) return;
+    var info=L[k]; if(!info) return;
+    if(colF&&info.col!==colF) return;
+    list.push({k:k,v:v,info:info});
+  });
+  (state.unk||[]).forEach(function(u){
+    if(!isPend(u.s)) return; if(f==="1"&&u.s!==1) return; if(f==="2"&&u.s!==2) return; if(f==="4"&&u.s!==4) return; if(f==="ab"&&!u.ab) return;
+    if(colF&&u.col!==colF) return; var inf=unkInfo(u); if(!inf) return; list.push({k:"u:"+u.id,v:u,info:inf});
+  });
+  var now=new Date();
+  list.forEach(function(x){x.days=x.v.d?Math.max(0,Math.floor((now-new Date(x.v.d+"T00:00:00"))/86400000)):null;});
+  list.sort(function(a,b){return PRANK[b.v.s]-PRANK[a.v.s]||(b.days||0)-(a.days||0);});
+  $("progList").innerHTML=list.length?list.map(function(x){
+    var c=CMAP[x.info.col], g=x.info.g, it=x.info.it;
+    return '<div class="pcard'+(x.v.ab?' long':'')+'" data-pk="'+esc(x.k)+'">'+
+      '<div><h3><i class="sw" style="--dc:var(--c-'+c.k+')"></i>'+esc(c.full+"・"+g.zh+"・"+it[1])+(isRare(it)?'<span class="tag rare">稀有</span>':'')+(x.v.ab?'<span class="tag" style="background:var(--warn);color:#fff">國外</span>':'')+'</h3>'+
+      '<div class="meta">'+SNAME[x.v.s]+(x.v.pl?"・"+esc(x.v.pl):"")+'</div></div>'+
+      '<div class="days">'+progDays(x.v)+'</div>'+
+      '<div class="ctrl">'+
+        '<select data-pf="s" aria-label="狀態"><option value="1"'+(x.v.s===1?' selected':'')+'>培養中</option><option value="4"'+(x.v.s===4?' selected':'')+'>待出發（滿 4 心）</option><option value="2"'+(x.v.s===2?' selected':'')+'>探險中</option></select>'+
+        '<label>'+(x.v.s===2?'出發日':'開始日')+' <input type="date" data-pf="d" value="'+esc(x.v.d||"")+'"></label>'+
+        (x.v.s===2?'<label>還要 <input type="number" min="0" step="1" inputmode="numeric" data-pf="ld" value="'+(x.v.re?remainDH(x.v.re).d:"")+'" style="width:4em" aria-label="天"> 天 <input type="number" min="0" max="23" step="1" inputmode="numeric" data-pf="lh" value="'+(x.v.re?remainDH(x.v.re).h:"")+'" style="width:4em" aria-label="小時"> 小時</label>':'')+
+        '<label class="check"><input type="checkbox" data-pf="ab"'+(x.v.ab?' checked':'')+'>國外</label>'+
+        '<input type="text" data-pf="pl" value="'+esc(x.v.pl||"")+'" placeholder="地點，例：大阪、仁川機場" aria-label="地點">'+
+        '<button class="btn sm" data-pact="done">'+(x.k.indexOf("u:")===0?'完成，選是哪一款':'完成，改為已擁有')+'</button>'+
+        '<button class="btn ghost" data-pact="del">取消標記</button>'+
+      '</div></div>';
+  }).join(""):'<p class="empty">沒有進行中的項目。到「地點飾品」或「活動飾品」，選「探險中」或「培養中」後點圓圈即可加入。</p>';
+}
+
+function renderCustom(){
+  var q=$("cq").value.trim().toLowerCase(), st=$("cStatus").value;
+  var rows=state.custom.filter(function(x){
+    if(st==="0"&&x.s!==0) return false;
+    if(st==="3"&&x.s!==3) return false;
+    if(st==="p"&&!isPend(x.s)) return false;
+    if(q&&(x.name+" "+x.origin).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+  $("cBody").innerHTML=rows.map(function(x){
+    var col=CMAP[x.color];
+    var colHtml=col?'<span class="swatch" style="--dc:var(--c-'+col.k+')"></span>'+col.full:'其他';
+    var sel='<select data-cs="'+esc(x.id)+'" aria-label="狀態">'+[3,2,4,1,0].map(function(n){return '<option value="'+n+'"'+(x.s===n?' selected':'')+'>'+SNAME[n]+'</option>';}).join("")+'</select>';
+    return '<tr><td>'+sel+'</td><td class="c-name">'+esc(x.name)+'</td><td>'+colHtml+'</td><td>'+esc(x.origin||"—")+'</td><td><button class="btn ghost" data-cdel="'+esc(x.id)+'">刪除</button></td></tr>';
+  }).join("");
+  $("cEmpty").hidden=state.custom.length>0;
+}
+
+/* ---------- 花苗 ---------- */
+function allGroups(){return CATS.concat(evGroups());}
+function catById(id){return allGroups().find(function(g){return g.id===id;});}
+function seedName(sd){
+  var g=catById(sd.cat);
+  var cn=sd.col==="huge"?"大花苗":(sd.col==="gold"?"金色花苗":(CMAP[sd.col]?CMAP[sd.col].full+"花苗":"花苗"));
+  var cos=""; if(g&&sd.cos==='st_any'){cos="（貼紙"+(sd.grp?"・"+sd.grp+" 組":"")+"，顏色未確認）";} else if(g&&sd.cos){var it=g.items.find(function(i){return i[0]===sd.cos;}); if(it) cos="（"+it[1]+(sd.grp?"・"+sd.grp+" 組":"")+"）";}
+  return cn+"・"+(g?g.zh:"？")+cos;
+}
+function seedEval(sd){
+  var g=catById(sd.cat); if(!g) return {p:0,t:"找不到這個地點",k:"no",miss:[],g:null};
+  var items=g.items.filter(function(it){return !isRare(it)&&(!sd.cos||it[0]===sd.cos||(sd.cos==='st_any'&&it[0].indexOf('st_')===0));});
+  var pairs=[];
+  items.forEach(function(it){it[2].split("").forEach(function(c){
+    if(!CMAP[c]) return; if(CMAP[sd.col]&&c!==sd.col) return;
+    pairs.push({it:it,c:c,s:cs(gKey(g,it,c)),w:(g.id==="park"&&!sd.cos)?(it[0]==="four"?0.1:0.9):1});});});
+  if(!pairs.length) return {p:0,t:"這個地點沒有這個顏色",k:"no",miss:[],g:g};
+  var nw=pairs.filter(function(x){return x.s===0;}), pd=pairs.filter(function(x){return isPend(x.s);}).length;
+  var sw=function(a){return a.reduce(function(t,x){return t+x.w;},0);};
+  var p=sw(nw)/sw(pairs), t, k;
+  if(p===1){t="一定是新的";k="new";}
+  else if(p>0){t="約 "+Math.round(p*100)+"% 機會是新的";k="maybe";}
+  else if(pd){t="同款已在進行中";k="dup";}
+  else {t="已經有了";k="dup";}
+  var miss=nw.map(function(x){return (items.length>1?x.it[1]:"")+CMAP[x.c].zh;});
+  return {p:p,t:t,k:k,miss:miss,g:g,multi:items.length>1&&!sd.cos&&g.items.filter(function(it){return !isRare(it);}).length>1};
+}
+var ELEM={r:"火菇",y:"電菇",b:"水菇",w:"毒菇",k:"水晶菇"};
+function availByColor(){
+  var h={}; COLORS.forEach(function(c){h[c.k]=0;});
+  cells.forEach(function(v,k){var col=k.split("~")[2]; if(!(col in h)) return; if(v.s===3) h[col]+=(v.n==null?1:v.n); else if(v.s===1||v.s===4) h[col]++;});
+  state.custom.forEach(function(x){if((x.color in h)&&(x.s===3||x.s===1||x.s===4)) h[x.color]++;});
+  (state.unk||[]).forEach(function(u){if((u.col in h)&&(u.s===1||u.s===4)) h[u.col]++;});
+  return h;
+}
+function seedRank(){
+  var av=availByColor();
+  var planted={}; state.seeds.forEach(function(s){if(s.gr&&CMAP[s.col]) planted[s.col]=(planted[s.col]||0)+1;});
+  return state.seeds.map(function(sd){
+    var e=seedEval(sd), sc=e.p;
+    var es=e.g?evStatus(e.g):null;
+    if(es&&es.k==="live"&&e.p>0) sc+=2;
+    if(sd.cat==="roadside") sc*=0.5;
+    var coming=(planted[sd.col]||0)-(sd.gr?1:0);
+    var short=(ELEM[sd.col]&&av[sd.col]+coming<15)?15-av[sd.col]-coming:0;
+    if(short) sc+=1+short*0.1;
+    return {sd:sd,e:e,sc:sc,es:es,short:short,av:av[sd.col]};
+  }).sort(function(a,b){return b.sc-a.sc||(a.sd.st||0)-(b.sd.st||0);});
+}
+function seedCard(x,i,full){
+  var sd=x.sd, e=x.e, g=e.g;
+  var why=[];
+  var hasRare=!!(g&&g.items.some(isRare));
+  if(e.p===0&&!x.short) why.push(hasRare?"飾品已經有了，但這個地點有稀有款，可以先留著（收齊這個地點的一般款後才有機會出稀有）":"飾品已經有了，這個地點沒有稀有款，可以放掉");
+  if(x.short) why.push(CMAP[sd.col].full+"只有 "+x.av+" 隻，大"+ELEM[sd.col]+"還差 "+x.short+" 隻，就算飾品重複也值得種");
+  if(x.es&&x.es.k==="live") why.push("活動"+x.es.t.replace("進行中・",""));
+  if(sd.col==="huge"||sd.col==="gold") why.push("拔出來直接是飾品，顏色隨機");
+  if(sd.cat==="roadside") why.push("路邊最容易拿；貼紙紀錄可能不完整，僅供參考");
+  if(e.multi) why.push("這個地點有兩種以上飾品，去花苗詳情確認款式會更準");
+  if(sd.note) why.push(sd.note);
+  var miss=e.miss.length?'<p class="why">可能拿到的新飾品：'+esc(e.miss.slice(0,10).join("、"))+(e.miss.length>10?"…":"")+'</p>':'';
+  var ctrl='';
+  if(full){
+    var opts='<option value="">款式未確認</option>'+(g&&g.id==='roadside'?'<option value="st_any"'+(sd.cos==='st_any'?' selected':'')+'>貼紙（顏色未確認）</option>':'')+(g?g.items.filter(function(it){return !isRare(it);}).map(function(it){return '<option value="'+esc(it[0])+'"'+(sd.cos===it[0]?' selected':'')+'>'+esc(it[1])+'</option>';}).join(""):"");
+    ctrl='<div class="sctrl">'+((g&&g.items.filter(function(it){return !isRare(it);}).length>1)?'<select data-scos="'+esc(sd.id)+'" aria-label="款式">'+opts+'</select>':'')+
+      '<label class="stin">產地 <input type="text" data-sorg="'+esc(sd.id)+'" value="'+esc(sd.org||"")+'" placeholder="例：三芝" aria-label="產地" style="width:9em"></label>'+
+      (sd.cat==="roadside"&&sd.cos!=="coin"?'<label class="stin">貼紙組別 <select data-sgrp="'+esc(sd.id)+'" aria-label="貼紙組別">'+[["","未分組"],["A","A 組"],["B","B 組"],["C","C 組"]].map(function(o){return '<option value="'+o[0]+'"'+((sd.grp||"")===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join("")+'</select></label>':'')+
+      '<label class="stin">步數 <input type="number" min="0" inputmode="numeric" data-sst="'+esc(sd.id)+'" value="'+(sd.st||"")+'" placeholder="'+(SEEDSTEP[sd.col]||"")+'" aria-label="步數"></label>'+
+      '<button class="btn '+(sd.gr?'ghost':'ghost')+'" data-sgrow="'+esc(sd.id)+'">'+(sd.gr?'取消種植中':'種下了')+'</button><button class="btn sm" data-spluck="'+esc(sd.id)+'">已拔出</button><button class="btn ghost" data-sdel="'+esc(sd.id)+'">刪除</button></div>';
+  }
+  return '<div class="tip seed '+e.k+'"><h3><span class="rk">'+(i+1)+'</span>'+esc(seedName(sd))+(hasRare?'<span class="tag rare">有稀有款</span>':'<span class="tag">無稀有</span>')+(sd.gr?'<span class="tag" style="background:var(--accent);color:var(--accent-ink)">種植中</span>':'')+'<span class="vd '+e.k+'">'+esc(e.t)+'</span></h3>'+
+    '<p class="why">'+esc((sd.org||"")+(sd.st?"・"+sd.st.toLocaleString()+" 步":""))+(why.length?"。"+esc(why.join("。")):"")+'</p>'+miss+ctrl+'</div>';
+}
+function renderGrpBox(){
+  var box=$("grpBox"); var used={};
+  state.seeds.forEach(function(s){if(s.cat==="roadside"&&s.grp) used[s.grp]=(used[s.grp]||0)+1;});
+  var ks=Object.keys(used).sort();
+  if(!ks.length){box.hidden=true; return;}
+  var mp=state.grpMap||{A:"",B:"",C:""};
+  var opts=[["","還不知道"],["st_g","綠色貼紙"],["st_b","藍色貼紙"],["st_o","橘色貼紙"]];
+  box.hidden=false;
+  box.innerHTML='<p><b>路邊貼紙組別對應</b>：等某組有一顆種出來、知道是哪種貼紙，在這裡選一次，那組的花苗會全部自動改好。</p>'+
+    ks.map(function(k){return '<label class="stin" style="margin-right:12px">'+k+' 組（'+used[k]+' 顆）＝<select data-gmap="'+k+'">'+opts.map(function(o){return '<option value="'+o[0]+'"'+((mp[k]||"")===o[0]?' selected':'')+'>'+o[1]+'</option>';}).join("")+'</select></label>';}).join("");
+}
+function renderSeeds(){
+  renderGrpBox();
+  var r=seedRank();
+  $("seedCnt").textContent=state.seeds.length?state.seeds.length:"";
+  var q=($("sdQ").value||"").trim().toLowerCase();
+  var GAMECOL={r:"紅色",y:"黃色",b:"藍色",p:"紫色",w:"白色",g:"粉紅色",k:"灰色",i:"冰藍"};
+  var CWORD={"紅":"r","紅色":"r","黃":"y","黃色":"y","藍":"b","藍色":"b","紫":"p","紫色":"p","白":"w","白色":"w","粉紅":"g","粉紅色":"g","羽":"g","羽毛":"g","灰":"k","灰色":"k","岩":"k","岩石":"k","冰":"i","冰藍":"i","冰藍色":"i"};
+  var shown=r.map(function(x,i){return {x:x,i:i};}).filter(function(o){
+    if(!q) return true;
+    var sd=o.x.sd;
+    var hay=(seedName(sd)+" "+(sd.org||"")+" "+(sd.note||"")+" "+o.x.e.t).toLowerCase();
+    return q.split(/\s+/).every(function(w){
+      if(CWORD[w]) return sd.col===CWORD[w];
+      return hay.indexOf(w)>-1;
+    });
+  });
+  if($("sdSort").value==="type"){
+    var allG=CATS.concat(evGroups());
+    var COLI={}; COLORS.forEach(function(c,i){COLI[c.k]=i;}); COLI.huge=8; COLI.gold=9;
+    var tkey=function(sd){
+      var gi=allG.findIndex(function(g){return g.id===sd.cat;}); var g=allG[gi];
+      var ci=99; if(g&&sd.cos){var ii=g.items.findIndex(function(it){return it[0]===sd.cos;}); if(ii>-1) ci=ii; else if(sd.cos==="st_any") ci=2.5+({A:0,B:0.1,C:0.2}[sd.grp]||0.3);}
+      return [gi<0?999:gi, ci, COLI[sd.col]==null?99:COLI[sd.col]];
+    };
+    shown.sort(function(a,b){var x=tkey(a.x.sd), y=tkey(b.x.sd); for(var i=0;i<3;i++){if(x[i]!==y[i]) return x[i]-y[i];} return 0;});
+  }
+  var grow=shown.filter(function(o){return o.x.sd.gr;}), rest=shown.filter(function(o){return !o.x.sd.gr;});
+  var card=function(o){return seedCard(o.x,o.i,true);};
+  $("seedList").innerHTML=!r.length?'<p class="empty">還沒有花苗紀錄。用上面的表單新增。</p>':
+    (shown.length?((grow.length?'<h3 class="sechead">正在種（'+grow.length+'）</h3><div class="tips">'+grow.map(card).join("")+'</div>':'')+
+      (rest.length?'<h3 class="sechead">手上的花苗（'+rest.length+'）</h3><div class="tips">'+rest.map(card).join("")+'</div>':'')):'<p class="empty">沒有符合「'+esc(q)+'」的花苗。</p>');
+  renderSeedTips(r);
+}
+function renderSeedTips(r){
+  r=r||seedRank();
+  var top=r.filter(function(x){return x.e.p>0||x.short;}).slice(0,6);
+  $("seedTips").innerHTML=top.length?'<div class="tips">'+top.map(function(x,i){return seedCard(x,i,false);}).join("")+'</div><p class="legend">完整清單和操作在「花苗」分頁。</p>':
+    '<p class="legend">'+(state.seeds.length?"手上的花苗種出來都是已有的。":"還沒有花苗紀錄，可到「花苗」分頁新增。")+'</p>';
+}
+
+var curTab="tips";
+function renderAll(){
+  $("optRare").checked=state.opt.rare; $("optJp").checked=state.opt.jp;
+  renderMeters(); renderTips(); renderList(); renderEvents(); renderSeeds(); renderProg(); renderCustom();
+}
+
+/* ---------- 事件 ---------- */
+function showTab(t){
+  curTab=t;
+  document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",String(b.getAttribute("data-tab")===t));});
+  ["tips","dex","events","seeds","prog","custom"].forEach(function(p){$("pane-"+p).hidden=(p!==t);});
+  $("brush").hidden=!(t==="dex"||t==="events");
+  $("colorBar").hidden=!(t==="dex"||t==="events"||t==="prog");
+  if(t==="tips") renderTips();
+  if(t==="prog") renderProg();
+  if(t==="seeds") renderSeeds();
+}
+document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){showTab(b.getAttribute("data-tab"));});});
+
+$("brush").addEventListener("click",function(e){
+  var b=e.target.closest(".bbtn"); if(!b) return;
+  brushS=Number(b.getAttribute("data-b"));
+  $("brush").querySelectorAll(".bbtn").forEach(function(x){x.setAttribute("aria-pressed",String(x===b));});
+});
+
+function refreshCard(sec){
+  var gid=sec.getAttribute("data-g");
+  var g=locGroups().concat(evGroups()).find(function(x){return x.id===gid;}); if(!g) return;
+  var s=gStatsC(g); sec.querySelector(".prog").textContent=s.o+" / "+s.t;
+  sec.classList.toggle("done",s.t>0&&s.o===s.t);
+}
+function onDot(e){
+  var b=e.target.closest(".dot"); if(!b) return;
+  var k=b.getAttribute("data-k"), cur=cs(k), info=lookup()[k], name=info?(CMAP[info.col].full+"・"+info.g.zh+"・"+info.it[1]):"";
+  if(brushS===6||brushS===7){
+    var c0=cells.get(k);
+    if(brushS===6){
+      if(cur===3){c0.n=(c0.n==null?1:c0.n)+1;}
+      else{ if(isPend(cur)) toast("這格原本是"+SNAME[cur]+"，已改成已擁有"); cells.set(k,{s:3,n:1,d:"",ab:false,pl:c0?c0.pl:"",re:""}); }
+      toast("＋1："+name+"，現在 "+cells.get(k).n+" 隻");
+    }else{
+      var ltd=info&&(info.g.id.charAt(0)==="e"||isRare(info.it)), nn0=(c0&&c0.n!=null)?c0.n:1;
+      if(cur===3&&ltd&&nn0===1&&window.__lastWarn!==k){window.__lastWarn=k; toast("「"+name+"」是限定／稀有飾品，建議至少留 1 隻。真的要放掉，再點一次"); return;}
+      window.__lastWarn="";
+      if(cur===3&&(c0.n==null?1:c0.n)>0){c0.n=(c0.n==null?1:c0.n)-1; toast("－1："+name+"，現在 "+c0.n+" 隻"+(c0.n===0?"（仍算已收集）":""));}
+      else{toast(name+" 目前沒有可以減的"); return;}
+    }
+    renderList(); renderEvents(); renderMeters(); renderSeeds(); scheduleSave(); return;
+  }
+  var next;
+  if(cur===brushS) next=0;
+  else if(isPend(cur)&&brushS!==3){
+    next=brushS;
+  } else if(cur===3&&brushS!==3){
+    if(!confirm("「"+name+"」已經擁有，還要標記為"+SNAME[brushS]+"嗎？（會變成未擁有＋進行中）")) return;
+    next=brushS;
+  } else next=brushS;
+  if(next===0){cells.delete(k);}
+  else{
+    var old=cells.get(k)||{d:"",ab:false,pl:""};
+    cells.set(k,{s:next,n:(next===3?((cur===3&&old.n!=null)?old.n:1):0),d:isPend(next)?((isPend(cur)&&old.d&&!(next===2&&cur!==2))?old.d:todayStr()):old.d,ab:old.ab,pl:old.pl,re:(next===2?(old.re||""):"")});
+  }
+  b.setAttribute("data-s",String(next));
+  b.textContent=SGLYPH[next]||(info?CMAP[info.col].zh:"");
+  b.setAttribute("aria-label",name+"："+SNAME[next]);
+  refreshCard(b.closest(".cat"));
+  var rowEl=b.closest(".row"); if(info&&rowEl){rowEl.querySelector(".cname").innerHTML=rowName(info.g,info.it,info.g.items.indexOf(info.it));}
+  if(next===2) openDays(k,name);
+  else if(next===1) toast("已標記培養中："+name);
+  else if(next===4) toast("已標記待出發（滿 4 心、禮物探險還沒派）："+name);
+  renderMeters(); scheduleSave();
+}
+$("list").addEventListener("click",onDot);
+$("evList").addEventListener("click",function(e){
+  var d=e.target.closest("[data-cevdel]");
+  if(d){
+    var id=d.getAttribute("data-cevdel"), idx=Number(d.getAttribute("data-idx"));
+    var ev=state.cev.find(function(x){return x.id===id;}); if(!ev) return;
+    if(!confirm("要刪除「"+ev.zh+"／"+ev.items[idx][1]+"」嗎？")) return;
+    var it=ev.items[idx];
+    it[2].split("").forEach(function(col){cells.delete(id+"~"+it[0]+"~"+col);});
+    ev.items.splice(idx,1);
+    if(!ev.items.length) state.cev=state.cev.filter(function(x){return x.id!==id;});
+    renderEvents(); renderMeters(); scheduleSave(); return;
+  }
+  onDot(e);
+});
+$("list").addEventListener("input",function(e){
+  var id=e.target.getAttribute("data-note"); if(!id) return;
+  if(e.target.value.trim()) state.notes[id]=e.target.value; else delete state.notes[id];
+  scheduleSave();
+});
+$("q").addEventListener("input",renderList);
+$("status").addEventListener("change",renderList);
+$("evStatus").addEventListener("change",renderEvents);
+$("optRare").addEventListener("change",function(){state.opt.rare=this.checked; renderMeters(); renderList(); renderEvents(); scheduleSave();});
+$("optJp").addEventListener("change",function(){state.opt.jp=this.checked; renderMeters(); renderList(); scheduleSave();});
+
+// 自訂活動
+$("eColors").innerHTML='<span style="color:var(--muted)">可取得顏色：</span>'+COLORS.map(function(c){return '<label class="check"><input type="checkbox" value="'+c.k+'"'+(c.k!=="i"?' checked':'')+'>'+c.full+'</label>';}).join("");
+$("eAdd").addEventListener("click",function(){
+  var en=$("eName").value.trim(), item=$("eItem").value.trim();
+  if(!en){$("eName").focus(); toast("請輸入活動名稱"); return;}
+  if(!item){$("eItem").focus(); toast("請輸入飾品名稱"); return;}
+  var cols=Array.prototype.slice.call($("eColors").querySelectorAll("input:checked")).map(function(x){return x.value;}).join("");
+  if(!cols){toast("至少勾一個顏色"); return;}
+  var ev=state.cev.find(function(x){return x.zh===en;});
+  if(!ev){ev={id:"c"+uid(),zh:en,end:$("eEnd").value||"",items:[]}; state.cev.unshift(ev);}
+  else if($("eEnd").value) ev.end=$("eEnd").value;
+  ev.items.push([uid(),item,cols]);
+  $("eItem").value=""; renderEvents(); renderMeters(); scheduleSave(); toast("已新增："+en+"／"+item);
+});
+
+// 進行中
+$("pFilter").addEventListener("change",renderProg);
+$("progList").addEventListener("change",function(e){
+  var card=e.target.closest(".pcard"); if(!card) return;
+  var k=card.getAttribute("data-pk"), v=getP(k); if(!v) return;
+  var f=e.target.getAttribute("data-pf");
+  if(f==="s"){var ns=Number(e.target.value); if(ns===2&&v.s!==2) v.d=todayStr(); v.s=ns;}
+  else if(f==="d") v.d=e.target.value;
+  else if(f==="ab") v.ab=e.target.checked;
+  else if(f==="pl") v.pl=e.target.value.trim();
+  else if(f==="re") v.re=e.target.value;
+  else if(f==="ld"||f==="lh"){
+    var cd=card.querySelector('[data-pf=ld]').value.trim(), ch=card.querySelector('[data-pf=lh]').value.trim();
+    var dn2=parseFloat(cd||"0"), hn2=parseFloat(ch||"0");
+    v.re=((!cd&&!ch)||isNaN(dn2)||isNaN(hn2)||dn2<0||hn2<0)?"":addDays(dn2+hn2/24);
+  }
+  else return;
+  scheduleSave(); renderProg(); renderMeters();
+  if(f==="s"||f==="d"||f==="re"||f==="ld"||f==="lh"){renderList(); renderEvents();}
+});
+$("progList").addEventListener("click",function(e){
+  var a=e.target.getAttribute("data-pact"); if(!a) return;
+  var card=e.target.closest(".pcard"), k=card.getAttribute("data-pk"), v=getP(k); if(!v) return;
+  if(k.indexOf("u:")===0){
+    if(a==="done"){openPluck({id:null,cat:v.cat,col:v.col,cos:v.cos||"",org:v.pl||"",finishUnk:v.id}); return;}
+    if(a==="del"){state.unk=state.unk.filter(function(x){return x.id!==v.id;}); scheduleSave(); renderAll(); return;}
+  }
+  if(a==="done"){v.s=3; v.n=1; toast("已改為已擁有");}
+  if(a==="del"){cells.delete(k);}
+  scheduleSave(); renderAll();
+});
+
+// 自訂清單
+$("cColor").innerHTML=COLORS.map(function(c){return '<option value="'+c.k+'">'+c.full+'</option>';}).join("")+'<option value="x">其他</option>';
+function addCustom(){
+  var name=$("cName").value.trim();
+  if(!name){$("cName").focus(); toast("請先輸入名稱"); return;}
+  var dup=state.custom.find(function(x){return x.name===name&&x.color===$("cColor").value&&isPend(x.s);});
+  if(dup&&!confirm("「"+name+"」同顏色已經在"+SNAME[dup.s]+"，還要新增嗎？")) return;
+  state.custom.unshift({id:uid(),name:name,color:$("cColor").value,origin:$("cOrigin").value.trim(),s:Number($("cState").value)});
+  $("cName").value=""; $("cOrigin").value=""; $("cName").focus();
+  renderCustom(); renderMeters(); scheduleSave();
+}
+$("cAdd").addEventListener("click",addCustom);
+["cName","cOrigin"].forEach(function(id){$(id).addEventListener("keydown",function(e){if(e.key==="Enter")addCustom();});});
+$("cq").addEventListener("input",renderCustom);
+$("cStatus").addEventListener("change",renderCustom);
+$("cBody").addEventListener("change",function(e){
+  var id=e.target.getAttribute("data-cs"); if(!id) return;
+  var x=state.custom.find(function(y){return y.id===id;}); if(!x) return;
+  x.s=Number(e.target.value); scheduleSave(); renderMeters();
+  if($("cStatus").value!=="all") renderCustom();
+});
+$("cBody").addEventListener("click",function(e){
+  var id=e.target.getAttribute("data-cdel"); if(!id) return;
+  var x=state.custom.find(function(y){return y.id===id;}); if(!x) return;
+  if(!confirm("要刪除「"+x.name+"」嗎？")) return;
+  state.custom=state.custom.filter(function(y){return y.id!==id;});
+  renderCustom(); renderMeters(); scheduleSave();
+});
+
+// 標記探險中時直接填天數
+var dsKey=null;
+function openDays(k,name){
+  dsKey=k; $("dsTitle").textContent="「"+name+"」遊戲顯示還要幾天回來？";
+  $("dsD").value=""; $("dsH").value=""; $("daySheet").hidden=false;
+  try{$("dsD").focus();}catch(e){}
+}
+function setDays(n){
+  var v=dsKey?cells.get(dsKey):null;
+  if(v&&v.s===2&&n!==null) v.re=addDays(n);
+  $("daySheet").hidden=true; dsKey=null;
+  renderList(); renderEvents(); renderProg(); scheduleSave();
+  toast(n===null?"已標記探險中，天數可到「進行中」補填":"已標記探險中，"+remainLabel(addDays(n)," "));
+}
+$("daySheet").addEventListener("click",function(e){
+  var b=e.target.closest("[data-dn]"); if(b) setDays(Number(b.getAttribute("data-dn")));
+});
+$("dsOk").addEventListener("click",function(){
+  var dv=$("dsD").value.trim(), hv=$("dsH").value.trim();
+  var dn=parseFloat(dv||"0"), hn=parseFloat(hv||"0");
+  if(isNaN(dn)||isNaN(hn)||dn<0||hn<0){toast("請輸入 0 以上的數字"); return;}
+  if(dn===0&&hn===0){toast("請填天數或小時，或按「先不填」"); return;}
+  setDays(dn+hn/24);
+});
+["dsD","dsH"].forEach(function(id){$(id).addEventListener("keydown",function(e){if(e.key==="Enter") $("dsOk").click();});});
+$("dsSkip").addEventListener("click",function(){setDays(null);});
+
+// 花苗表單與操作
+function fillSdCat(){
+  $("sdCat").innerHTML='<optgroup label="地點">'+CATS.map(function(c){return '<option value="'+c.id+'">'+esc(c.zh)+'</option>';}).join("")+'</optgroup><optgroup label="活動">'+evGroups().map(function(g){return '<option value="'+esc(g.id)+'">'+esc(g.zh)+'</option>';}).join("")+'</optgroup>';
+  fillSdCos();
+}
+function fillSdCos(){
+  var g=catById($("sdCat").value);
+  var its=g?g.items.filter(function(it){return !isRare(it);}):[];
+  $("sdCos").innerHTML='<option value="">'+(its.length>1?"未確認":"（只有一款）")+'</option>'+(g&&g.id==='roadside'?'<option value="st_any">貼紙（顏色未確認）</option>':'')+(its.length>1?its.map(function(it){return '<option value="'+esc(it[0])+'">'+esc(it[1])+'</option>';}).join(""):"");
+}
+$("sdCol").innerHTML=COLORS.map(function(c){return '<option value="'+c.k+'">'+c.full+'花苗</option>';}).join("")+'<option value="huge">大花苗</option><option value="gold">金色花苗</option>';
+var SEEDSTEP={r:1000,y:1000,b:1000,p:3000,w:3000,g:5000,k:5000,i:5000,huge:10000,gold:100};
+function fillSdSt(){$("sdSt").value=SEEDSTEP[$("sdCol").value]||"";}
+$("sdCol").addEventListener("change",fillSdSt);
+fillSdSt();
+fillSdCat();
+$("sdCat").addEventListener("change",fillSdCos);
+$("sdQ").addEventListener("input",function(){renderSeeds();});
+$("sdSort").addEventListener("change",function(){renderSeeds();});
+$("grpBox").addEventListener("change",function(e){
+  var g=e.target.getAttribute("data-gmap"); if(!g) return;
+  var v=e.target.value; state.grpMap=state.grpMap||{A:"",B:"",C:""};
+  var other=Object.keys(state.grpMap).find(function(k){return k!==g&&v&&state.grpMap[k]===v;});
+  if(other){toast(other+" 組已經是這種貼紙了，兩組不會是同一種，請確認"); e.target.value=state.grpMap[g]||""; return;}
+  state.grpMap[g]=v; var n=0;
+  state.seeds.forEach(function(s){if(s.cat==="roadside"&&s.grp===g){s.cos=v||"st_any"; n++;}});
+  renderSeeds(); scheduleSave(); toast(g+" 組 "+n+" 顆花苗已更新");
+});
+$("sdAdd").addEventListener("click",function(){
+  state.seeds.push({id:uid(),cat:$("sdCat").value,col:$("sdCol").value,cos:$("sdCos").value,org:$("sdOrg").value.trim(),st:Number($("sdSt").value)||0,note:""});
+  $("sdOrg").value=""; fillSdSt();
+  renderSeeds(); scheduleSave(); toast("已新增花苗");
+});
+function onSeedClick(e){
+  var gw=e.target.getAttribute("data-sgrow");
+  if(gw){var sg=state.seeds.find(function(x){return x.id===gw;}); if(sg){sg.gr=!sg.gr; renderSeeds(); scheduleSave(); toast(sg.gr?"已標為種植中":"已取消種植中");} return;}
+  var del=e.target.getAttribute("data-sdel"), pl=e.target.getAttribute("data-spluck");
+  if(pl){var sp=state.seeds.find(function(x){return x.id===pl;}); if(sp) openPluck(sp); return;}
+  if(del){state.seeds=state.seeds.filter(function(x){return x.id!==del;}); renderSeeds(); scheduleSave(); toast("已刪除花苗"); return;}
+  if(pl){
+    var sd=state.seeds.find(function(x){return x.id===pl;}); if(!sd) return;
+    var g=catById(sd.cat), msg="已拔出";
+    if(g&&CMAP[sd.col]){
+      var its=g.items.filter(function(it){return !isRare(it)&&it[2].indexOf(sd.col)>-1;});
+      var it=sd.cos?its.find(function(i){return i[0]===sd.cos;}):(its.length===1?its[0]:null);
+      if(it){var k=gKey(g,it,sd.col); if(cs(k)===0){cells.set(k,{s:1,d:todayStr(),ab:false,pl:sd.org,re:""}); msg="已拔出，"+CMAP[sd.col].full+"・"+g.zh+"・"+it[1]+" 改為培養中";}}
+      else msg="已拔出。款式未確認，請到清單用「培養中」點對應的圓圈";
+    } else msg="已拔出。大花苗／金色花苗拔出就是飾品，請到清單點已擁有";
+    state.seeds=state.seeds.filter(function(x){return x.id!==pl;});
+    scheduleSave(); renderAll(); toast(msg);
+  }
+}
+$("seedList").addEventListener("click",onSeedClick);
+$("seedList").addEventListener("change",function(e){
+  var oid=e.target.getAttribute("data-sorg");
+  if(oid){var s3=state.seeds.find(function(x){return x.id===oid;}); if(!s3) return; s3.org=e.target.value.trim(); renderSeeds(); scheduleSave(); return;}
+  var gp=e.target.getAttribute("data-sgrp");
+  if(gp){var s3=state.seeds.find(function(x){return x.id===gp;}); if(!s3) return; s3.grp=e.target.value; var mp=state.grpMap||{}; if(s3.grp&&mp[s3.grp]) s3.cos=mp[s3.grp]; renderSeeds(); scheduleSave(); return;}
+  var sid=e.target.getAttribute("data-sst");
+  if(sid){var s2=state.seeds.find(function(x){return x.id===sid;}); if(!s2) return; var v=parseInt(e.target.value,10); s2.st=(isNaN(v)||v<0)?(SEEDSTEP[s2.col]||0):v; renderSeeds(); scheduleSave(); return;}
+  var id=e.target.getAttribute("data-scos"); if(!id) return;
+  var sd=state.seeds.find(function(x){return x.id===id;}); if(!sd) return;
+  sd.cos=e.target.value; renderSeeds(); scheduleSave();
+});
+
+// 拔出花苗
+var plSeed=null, plCol="", plIt="";
+function plDecor(){return plSeed&&(plSeed.col==="huge"||plSeed.col==="gold"||!!plSeed.finishUnk);}
+function plItemsOf(g){var its=g.items.filter(function(it){return !isRare(it);}); if(plSeed.cos==="st_any") its=its.filter(function(it){return it[0].indexOf("st_")===0;}); return its;}
+function openPluck(sd){
+  var g=catById(sd.cat); if(!g){toast("找不到這個地點"); return;}
+  plSeed=sd; plCol=CMAP[sd.col]?sd.col:""; plIt=(sd.cos&&sd.cos!=="st_any")?sd.cos:"";
+  if(!plDecor()&&!plIt) plIt="?";
+  $("plTitle").textContent=sd.finishUnk?("「"+(CMAP[sd.col]?CMAP[sd.col].full:"")+"・"+g.zh+"」變成哪一款？"):("「"+seedName(sd)+"」拔出來是哪個？");
+  $("plHint").textContent=sd.finishUnk?"選牠變成的飾品款式，會記成已擁有（重複的數量＋1）。":(plDecor()?"大花苗／金色花苗拔出來直接是飾品：新的記成已擁有，重複的數量＋1。":"一般花苗拔出來是普通皮克敏。路邊、公園這類要等 4 心才知道款式，就選「還不知道」，之後在「進行中」按完成時再選。");
+  drawPluck(); $("pluckSheet").hidden=false;
+}
+function drawPluck(){
+  var g=catById(plSeed.cat), its=plItemsOf(g);
+  var cols=COLORS.filter(function(c){return its.some(function(it){return it[2].indexOf(c.k)>-1;});});
+  if(CMAP[plSeed.col]) cols=cols.filter(function(c){return c.k===plSeed.col;});
+  if(cols.length===1) plCol=cols[0].k;
+  $("plCols").innerHTML=cols.map(function(c){return '<button class="bbtn" data-plc="'+c.k+'" aria-pressed="'+(plCol===c.k)+'"><i class="sw" style="--dc:var(--c-'+c.k+')"></i>'+c.full+'</button>';}).join("");
+  var its2=its.filter(function(it){return !plCol||it[2].indexOf(plCol)>-1;});
+  if(its2.length===1) plIt=its2[0][0];
+  if(plIt&&plIt!=="?"&&!its2.some(function(it){return it[0]===plIt;})) plIt="";
+  $("plItems").innerHTML=its2.length>1?((!plDecor()?'<button class="bbtn" data-pli="?" aria-pressed="'+(plIt==="?")+'">還不知道（4 心後才知道）</button>':'')+its2.map(function(it){return '<button class="bbtn" data-pli="'+esc(it[0])+'" aria-pressed="'+(plIt===it[0])+'">'+esc(it[1])+'</button>';}).join("")):"";
+}
+$("pluckSheet").addEventListener("click",function(e){
+  var c=e.target.closest("[data-plc]"), it=e.target.closest("[data-pli]");
+  if(c){plCol=c.getAttribute("data-plc"); drawPluck();}
+  if(it){plIt=it.getAttribute("data-pli"); drawPluck();}
+});
+$("plCancel").addEventListener("click",function(){plSeed=null; $("pluckSheet").hidden=true;});
+$("plOk").addEventListener("click",function(){
+  if(!plSeed) return;
+  if(!plCol){toast("請選顏色"); return;}
+  if(plIt==="?"&&!plDecor()){
+    var g0=catById(plSeed.cat);
+    state.unk=state.unk||[];
+    state.unk.push({id:uid(),cat:plSeed.cat,col:plCol,cos:plSeed.cos==="st_any"?"st_any":"",s:1,d:todayStr(),ab:false,pl:plSeed.org||"",re:""});
+    var sid0=plSeed.id; state.seeds=state.seeds.filter(function(x){return x.id!==sid0;});
+    plSeed=null; $("pluckSheet").hidden=true; scheduleSave(); renderAll();
+    toast(CMAP[plCol].full+"・"+g0.zh+" 記成培養中，款式等完成時再選"); return;
+  }
+  if(!plIt){toast("請選款式"); return;}
+  var g=catById(plSeed.cat), it=g.items.find(function(i){return i[0]===plIt;}), k=gKey(g,it,plCol), cur=cs(k);
+  var name=CMAP[plCol].full+"・"+g.zh+"・"+it[1], msg;
+  if(plSeed.finishUnk){
+    var fu=plSeed.finishUnk, c1=cells.get(k);
+    if(cur===3){c1.n=(c1.n==null?1:c1.n)+1; msg="重複："+name+" 現在 "+c1.n+" 隻";}
+    else{cells.set(k,{s:3,n:1,d:"",ab:false,pl:plSeed.org||"",re:""}); msg=(isPend(cur)?"注意：這格原本是"+SNAME[cur]+"，已改成已擁有。":"新飾品！")+name;}
+    state.unk=state.unk.filter(function(x){return x.id!==fu;});
+    plSeed=null; $("pluckSheet").hidden=true; scheduleSave(); renderAll(); toast(msg); return;
+  }
+  if(plDecor()){
+    var c0=cells.get(k);
+    if(cur===3){c0.n=(c0.n==null?1:c0.n)+1; msg="重複："+name+" 現在 "+c0.n+" 隻";}
+    else{ if(isPend(cur)) state.plain=(state.plain||0)+1; cells.set(k,{s:3,n:1,d:"",ab:false,pl:plSeed.org||"",re:""}); msg="新飾品！"+name; }
+  }else{
+    if(cur===0){cells.set(k,{s:1,n:0,d:todayStr(),ab:false,pl:plSeed.org||"",re:""}); msg=name+" 改為培養中";}
+    else{state.plain=(state.plain||0)+1; msg=name+" 已經有了或在進行中，這隻算進一般皮克敏";}
+  }
+  var sid=plSeed.id; state.seeds=state.seeds.filter(function(x){return x.id!==sid;});
+  plSeed=null; $("pluckSheet").hidden=true;
+  scheduleSave(); renderAll(); toast(msg);
+});
+
+// 一般皮克敏數量與遊戲總數
+document.querySelector(".count").addEventListener("click",function(e){
+  var b=e.target.closest("[data-plain]"); if(!b) return;
+  state.plain=Math.max(0,(state.plain||0)+Number(b.getAttribute("data-plain")));
+  renderCount(); scheduleSave();
+});
+$("gameN").addEventListener("change",function(){
+  var v=parseInt(this.value,10); state.game=(isNaN(v)||v<0)?0:v; renderCount(); scheduleSave();
+});
+
+// 顏色篩選、進行中分類
+$("colorBar").addEventListener("click",function(e){
+  var b=e.target.closest("[data-cf]"); if(!b) return;
+  colF=b.getAttribute("data-cf");
+  $("colorBar").querySelectorAll("[data-cf]").forEach(function(x){x.setAttribute("aria-pressed",String(x===b));});
+  renderList(); renderEvents(); renderProg();
+});
+$("pChips").addEventListener("click",function(e){
+  var b=e.target.closest("[data-pf2]"); if(!b) return;
+  $("pFilter").value=b.getAttribute("data-pf2"); renderProg();
+});
+
+// 即時同步
+var pendingRemote=null;
+function isTyping(){var a=document.activeElement; return !!a&&((a.tagName==="INPUT"&&!/checkbox|radio|button/.test(a.type))||a.tagName==="TEXTAREA"||a.tagName==="SELECT");}
+function applyRemote(nd){
+  if(isTyping()){pendingRemote=nd; return;}
+  pendingRemote=null; state=nd; loadCells(); saveLocal(); renderAll(); toast("已同步另一邊的更新");
+}
+document.addEventListener("focusout",function(){setTimeout(function(){if(pendingRemote&&!isTyping()&&(pendingRemote.ts||0)>(state.ts||0)) applyRemote(pendingRemote);},50);});
+
+// 備份與還原
+$("bkMake").addEventListener("click",function(){
+  dumpCells(); var t=JSON.stringify(state); var ta=$("bkText"); ta.value=t; ta.select();
+  var ok=function(){toast("已複製備份文字，請貼到記事本或 LINE 保存");}, ng=function(){toast("已產生備份，請在框內全選後手動複製");};
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,ng);} else ng(); }catch(e){ng();}
+});
+$("bkLoad").addEventListener("click",function(){
+  var t=$("bkText").value.trim();
+  if(!t){toast("請先把備份文字貼進框內"); return;}
+  var d; try{d=JSON.parse(t);}catch(e){toast("備份文字格式不對，請確認有完整貼上"); return;}
+  keepPrev();
+  state=normalize(d); loadCells(); scheduleSave(); renderAll(); showPrev(); toast("已還原；還原前的紀錄已另存，可再換回來");
+});
+$("prevLoad").addEventListener("click",function(){
+  var p=null; try{p=localStorage.getItem(LS_KEY+"-prev");}catch(e){}
+  if(!p){toast("沒有另存的紀錄"); return;}
+  var d; try{d=JSON.parse(p);}catch(e){toast("另存的紀錄讀不到"); return;}
+  keepPrev();
+  state=normalize(d); loadCells(); scheduleSave(); renderAll(); showPrev(); toast("已換回另存的紀錄（換之前的也已另存）");
+});
+showPrev();
+
+renderAll();
+setStatus(hasData(state)?"已載入這台裝置的紀錄":"尚未有紀錄");
+
+// 帳號同步
+(async function(){
+  try{
+    if(!window.claude||typeof window.claude.use!=="function"){remoteReady=true; setStatus("紀錄存在這台裝置的瀏覽器"); return;}
+    var db=await window.claude.use("db");
+    var user=await window.claude.use("user");
+    if(!db||!user){remoteReady=true; setStatus("紀錄存在這台裝置的瀏覽器"); return;}
+    var id=await user.id();
+    var ref=db.collection("shared").doc("pikmin"); // 兩個帳號共用同一份紀錄
+    var snap=await ref.get();
+    if(!snap.exists&&id){ // 共用那份還沒建立：從私人空間複製過來（私人那份保留不刪）
+      try{var ps=await db.collection("data/users/"+id).doc("pikmin").get(); if(ps.exists){await ref.set(ps.data()); snap=await ref.get();}}catch(e2){}
+    }
+    dumpCells();
+    if(snap.exists){
+      var srv=normalize(snap.data());
+      if(hasData(state)&&(state.ts||0)>(srv.ts||0)){
+        await ref.set(state); // 這台裝置的紀錄較新，保留並上傳
+      }else{
+        if(hasData(state)&&!sameData(state,srv)){ keepPrev(); toast("已載入帳號紀錄；這台裝置原本的紀錄已另存，可在最下方換回來"); }
+        state=srv; loadCells(); saveLocal(); renderAll(); showPrev();
+      }
+    }else if(hasData(state)){ await ref.set(state); }
+    dbDoc=ref; remoteReady=true;
+    setStatus("已連結，即時同步中");
+    try{
+      ref.onSnapshot(function(sn){
+        if(!sn.exists) return;
+        var nd=normalize(sn.data());
+        if((nd.ts||0)<=(state.ts||0)) return;
+        if(saveTimer) return;
+        applyRemote(nd);
+      },function(){setStatus("即時同步中斷，重新整理可恢復");});
+    }catch(e3){}
+  }catch(err){
+    remoteReady=true;
+    setStatus("無法連結帳號，紀錄先存在這台裝置");
+  }
+})();
+})();
+</script>
+</body>
+</html>
