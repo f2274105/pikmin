@@ -357,6 +357,12 @@ h2.sec{font-size:1.05rem; font-weight:900; margin:18px 0 10px}
         <option value="1">只看培養中</option>
         <option value="ab">只看國外</option>
       </select>
+      <select id="pCat" aria-label="進行中飾品類別"><option value="">全部飾品類別</option></select>
+      <select id="pSort" aria-label="進行中排序">
+        <option value="">排序：狀態、天數</option>
+        <option value="col">排序：依顏色</option>
+        <option value="dec">排序：依飾品</option>
+      </select>
     </div>
     <div class="dsq" id="pChips" style="margin-top:0"></div>
     <p class="sechead" id="expSum"></p>
@@ -774,7 +780,7 @@ function renderProg(){
   (state.unk||[]).forEach(function(u){ if(!isPend(u.s)) return; if(colF&&u.col!==colF) return; cnt.all++; cnt[String(u.s)]=(cnt[String(u.s)]||0)+1; if(u.ab) cnt.ab++; });
   var fv=$("pFilter").value;
   $("pChips").innerHTML=[["all","全部"],["2","探險中"],["4","待出發"],["1","培養中"],["ab","國外"]].map(function(x){return '<button class="bbtn" data-pf2="'+x[0]+'" aria-pressed="'+(fv===x[0])+'">'+x[1]+' '+cnt[x[0]]+'</button>';}).join("");
-  var f=$("pFilter").value, L=lookup(), list=[];
+  var f=$("pFilter").value, L=lookup(), list=[], catSeen={}, pc=$("pCat").value, ps=$("pSort").value;
   cells.forEach(function(v,k){
     if(!isPend(v.s)) return;
     if(f==="1"&&v.s!==1) return;
@@ -783,15 +789,32 @@ function renderProg(){
     if(f==="ab"&&!v.ab) return;
     var info=L[k]; if(!info) return;
     if(colF&&info.col!==colF) return;
+    catSeen[info.g.id]=info.g.zh;
+    if(pc&&info.g.id!==pc) return;
     list.push({k:k,v:v,info:info});
   });
   (state.unk||[]).forEach(function(u){
     if(!isPend(u.s)) return; if(f==="1"&&u.s!==1) return; if(f==="2"&&u.s!==2) return; if(f==="4"&&u.s!==4) return; if(f==="ab"&&!u.ab) return;
-    if(colF&&u.col!==colF) return; var inf=unkInfo(u); if(!inf) return; list.push({k:"u:"+u.id,v:u,info:inf});
+    if(colF&&u.col!==colF) return; var inf=unkInfo(u); if(!inf) return;
+    catSeen[inf.g.id]=inf.g.zh;
+    if(pc&&inf.g.id!==pc) return;
+    list.push({k:"u:"+u.id,v:u,info:inf});
   });
   var now=new Date();
   list.forEach(function(x){x.days=x.v.d?Math.max(0,Math.floor((now-new Date(x.v.d+"T00:00:00"))/86400000)):null;});
-  list.sort(function(a,b){return PRANK[b.v.s]-PRANK[a.v.s]||(b.days||0)-(a.days||0);});
+  var gOrd={}; locGroups().concat(evGroups()).forEach(function(g,i){if(!(g.id in gOrd)) gOrd[g.id]=i;});
+  var cOrd={}; COLORS.forEach(function(c,i){cOrd[c.k]=i;});
+  var byState=function(a,b){return PRANK[b.v.s]-PRANK[a.v.s]||(b.days||0)-(a.days||0);};
+  var gi=function(x){return (x.info.g.id in gOrd)?gOrd[x.info.g.id]:999;};
+  var ci=function(x){return (x.info.col in cOrd)?cOrd[x.info.col]:99;};
+  var nm=function(x){return String(x.info.it[1]);};
+  if(ps==="col") list.sort(function(a,b){return ci(a)-ci(b)||gi(a)-gi(b)||nm(a).localeCompare(nm(b))||byState(a,b);});
+  else if(ps==="dec") list.sort(function(a,b){return gi(a)-gi(b)||nm(a).localeCompare(nm(b))||ci(a)-ci(b)||byState(a,b);});
+  else list.sort(byState);
+  // 類別選單：只列目前有的類別
+  var ids=Object.keys(catSeen).sort(function(a,b){return ((a in gOrd)?gOrd[a]:999)-((b in gOrd)?gOrd[b]:999);});
+  if(pc&&!(pc in catSeen)){ids.push(pc); catSeen[pc]=(catById(pc)||{zh:pc}).zh;}
+  $("pCat").innerHTML='<option value="">全部飾品類別</option>'+ids.map(function(id){return '<option value="'+esc(id)+'"'+(id===pc?' selected':'')+'>'+esc(catSeen[id])+'</option>';}).join("");
   $("progList").innerHTML=list.length?list.map(function(x){
     var c=CMAP[x.info.col], g=x.info.g, it=x.info.it;
     return '<div class="pcard'+(x.v.ab?' long':'')+'" data-pk="'+esc(x.k)+'">'+
@@ -1069,6 +1092,8 @@ $("eAdd").addEventListener("click",function(){
 
 // 進行中
 $("pFilter").addEventListener("change",renderProg);
+$("pCat").addEventListener("change",renderProg);
+$("pSort").addEventListener("change",renderProg);
 $("progList").addEventListener("change",function(e){
   var card=e.target.closest(".pcard"); if(!card) return;
   var k=card.getAttribute("data-pk"), v=getP(k); if(!v) return;
